@@ -1,0 +1,6 @@
+@SafeMapQROOBackend_HostAddress = http://localhost:5078
+
+GET {{SafeMapQROOBackend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
