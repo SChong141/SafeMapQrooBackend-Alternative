@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SafeMapQROOBackend.Data;
+using SafeMapQROOBackend.Mappers;
 
 namespace SafeMapQROOBackend.Controllers
 {
@@ -20,7 +21,7 @@ namespace SafeMapQROOBackend.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var alberges = _context.Albergues.ToList();
+            var alberges = _context.Albergues.ToList().Select(s => s.ToAlberguesDTO());
 
             return Ok(alberges);
         }
@@ -35,11 +36,13 @@ namespace SafeMapQROOBackend.Controllers
                 return NotFound();
             }
 
-            return Ok(alberges);
+            return Ok(alberges.ToAlberguesDTO());
         }
-        /*
-        [HttpPost]
-        public IActionResult Create([FromBody] CreateAlbergeRequest)
-        */
+        
+        /*[HttpPost]
+        public IActionResult Create([FromBody] CreateShelterRequest albergesDto)
+        {
+            
+        }*/       
     }
 }

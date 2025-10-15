@@ -5,7 +5,7 @@ project.lock.json
 *.pyc
 nupkg/
 
-# SQLite3 Editoe (vs code)
+# SQLite3 Editor (vs code)
 *.db-shm
 *db-wal
 
