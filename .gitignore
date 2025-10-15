@@ -5,6 +5,10 @@ project.lock.json
 *.pyc
 nupkg/
 
+# SQLite3 Editoe (vs code)
+*.db-shm
+*db-wal
+
 # Visual Studio Code
 .vscode/
 

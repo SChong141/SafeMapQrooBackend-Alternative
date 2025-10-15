@@ -37,5 +37,9 @@ namespace SafeMapQROOBackend.Controllers
 
             return Ok(alberges);
         }
+        /*
+        [HttpPost]
+        public IActionResult Create([FromBody] CreateAlbergeRequest)
+        */
     }
 }
