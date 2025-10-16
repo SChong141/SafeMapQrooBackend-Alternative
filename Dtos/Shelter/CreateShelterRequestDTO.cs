@@ -3,18 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SafeMapQROOBackend.Models
+namespace SafeMapQROOBackend.Dtos.Shelter
 {
-    public class Shelter
+    public class CreateShelterRequestDTO
     {
-        public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
-        public double Latitude { get; set; }
+        public double Latidude { get; set; }
         public double Longitude { get; set; }
         public int Capacity { get; set; }
         public int Occupants { get; set; }
         public string Address { get; set; } = string.Empty;
         public bool Available { get; set; }
-        public bool Deleted { get; set; } = false;
     }
 }

@@ -8,12 +8,12 @@ namespace SafeMapQROOBackend.Dtos.Shelter
     public class ShelterDTO
     {
         public int Id { get; set; }
-        public string Nombre { get; set; } = string.Empty;
-        public double Latidud { get; set; }
-        public double Longitud { get; set; }
-        public int Capacidad { get; set; }
-        public int Ocupantes { get; set; }
-        public string Direccion { get; set; } = string.Empty;
-        public bool Disponible { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+        public int Capacity { get; set; }
+        public int Occupants { get; set; }
+        public string Address { get; set; } = string.Empty;
+        public bool Available { get; set; }
     }
 }

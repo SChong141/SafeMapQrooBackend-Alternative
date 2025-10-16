@@ -10,7 +10,7 @@ using SafeMapQROOBackend.Data;
 namespace SafeMapQROOBackend.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20251015172949_Init")]
+    [Migration("20251016155442_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -19,41 +19,41 @@ namespace SafeMapQROOBackend.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.6");
 
-            modelBuilder.Entity("SafeMapQROOBackend.Models.Albergues", b =>
+            modelBuilder.Entity("SafeMapQROOBackend.Models.Shelter", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Capacidad")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Direccion")
+                    b.Property<string>("Address")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("Disponible")
+                    b.Property<bool>("Available")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("Eliminado")
+                    b.Property<int>("Capacity")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double>("Latidud")
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("Latitude")
                         .HasColumnType("REAL");
 
-                    b.Property<double>("Longitud")
+                    b.Property<double>("Longitude")
                         .HasColumnType("REAL");
 
-                    b.Property<string>("Nombre")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Ocupantes")
+                    b.Property<int>("Occupants")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Albergues");
+                    b.ToTable("Shelter");
                 });
 #pragma warning restore 612, 618
         }

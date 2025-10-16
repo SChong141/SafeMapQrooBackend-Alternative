@@ -15,22 +15,27 @@ namespace SafeMapQROOBackend.Mappers
             return new ShelterDTO
             {
                 Id = shelterModel.Id,
-                Nombre = shelterModel.Nombre,
-                Latidud = shelterModel.Latidud,
-                Longitud = shelterModel.Longitud,
-                Capacidad = shelterModel.Capacidad,
-                Ocupantes = shelterModel.Ocupantes,
-                Direccion = shelterModel.Direccion,
-                Disponible = shelterModel.Disponible,
+                Name = shelterModel.Name,
+                Latitude = shelterModel.Latitude,
+                Longitude = shelterModel.Longitude,
+                Capacity = shelterModel.Capacity,
+                Occupants = shelterModel.Occupants,
+                Address = shelterModel.Address,
+                Available = shelterModel.Available,
             };
         }
 
-        /*public static ToShelterFromCreateDto(ThisExpressionSyntax CreateShelterRequestDto)
+        public static Shelter ToShelterFromCreateDTO(this CreateShelterRequestDTO shelterDTO)
         {
             return new Shelter
             {
-                
-            }
-        }*/
+                Name = shelterDTO.Name,
+                Latitude = shelterDTO.Latidude,
+                Longitude = shelterDTO.Longitude,
+                Capacity = shelterDTO.Capacity,
+                Address = shelterDTO.Address,
+                Available = shelterDTO.Available
+            };
+        }
     }
 }

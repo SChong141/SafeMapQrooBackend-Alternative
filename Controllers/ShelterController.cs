@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SafeMapQROOBackend.Data;
 using SafeMapQROOBackend.Mappers;
+using SafeMapQROOBackend.Models;
+using SafeMapQROOBackend.Dtos.Shelter;
 
 namespace SafeMapQROOBackend.Controllers
 {
@@ -39,10 +41,13 @@ namespace SafeMapQROOBackend.Controllers
             return Ok(shelters.ToShelterDTO());
         }
         
-        /*[HttpPost]
-        public IActionResult Create([FromBody] CreateShelterRequest sheltersDto)
+        [HttpPost]
+        public IActionResult Create([FromBody] CreateShelterRequestDTO shelterDTO)
         {
-            
-        }*/       
+            var shelterModel = shelterDTO.ToShelterFromCreateDTO();
+            _context.Shelter.Add(shelterModel);
+            _context.SaveChanges();
+            return CreatedAtAction(nameof(GetById), new { id = shelterModel.Id }, shelterModel.ToShelterDTO());
+        }       
     }
 }
