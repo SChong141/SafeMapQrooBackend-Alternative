@@ -15,6 +15,6 @@ namespace SafeMapQROOBackend.Data
             
         }
         
-        public DbSet<Albergues> Albergues { get; set; }
+        public DbSet<Shelter> Shelter { get; set; }
     }
 }

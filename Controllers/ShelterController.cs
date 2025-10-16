@@ -8,12 +8,12 @@ using SafeMapQROOBackend.Mappers;
 
 namespace SafeMapQROOBackend.Controllers
 {
-    [Route("api/alberges")]
+    [Route("api/shelters")]
     [ApiController]
-    public class AlberguesController : ControllerBase
+    public class ShelterController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
-        public AlberguesController(ApplicationDBContext context)
+        public ShelterController(ApplicationDBContext context)
         {
             _context = context;
         }
@@ -21,26 +21,26 @@ namespace SafeMapQROOBackend.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var alberges = _context.Albergues.ToList().Select(s => s.ToAlberguesDTO());
+            var shelters = _context.Shelter.ToList().Select(s => s.ToShelterDTO());
 
-            return Ok(alberges);
+            return Ok(shelters);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById([FromRoute] int id)
         {
-            var alberges = _context.Albergues.Find(id);
+            var shelters = _context.Shelter.Find(id);
 
-            if (alberges == null)
+            if (shelters == null)
             {
                 return NotFound();
             }
 
-            return Ok(alberges.ToAlberguesDTO());
+            return Ok(shelters.ToShelterDTO());
         }
         
         /*[HttpPost]
-        public IActionResult Create([FromBody] CreateShelterRequest albergesDto)
+        public IActionResult Create([FromBody] CreateShelterRequest sheltersDto)
         {
             
         }*/       
