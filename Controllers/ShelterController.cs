@@ -40,7 +40,7 @@ namespace SafeMapQROOBackend.Controllers
 
             return Ok(shelters.ToShelterDTO());
         }
-        
+
         [HttpPost]
         public IActionResult Create([FromBody] CreateShelterRequestDTO shelterDTO)
         {
@@ -48,6 +48,48 @@ namespace SafeMapQROOBackend.Controllers
             _context.Shelter.Add(shelterModel);
             _context.SaveChanges();
             return CreatedAtAction(nameof(GetById), new { id = shelterModel.Id }, shelterModel.ToShelterDTO());
-        }       
+        }
+
+        [HttpPut]
+        [Route("{id}")]
+        public IActionResult Update([FromRoute] int id, [FromBody] UpdateShelterRequestDTO updateDTO)
+        {
+            var shelterModel = _context.Shelter.FirstOrDefault(x => x.Id == id);
+
+            if (shelterModel == null)
+            {
+                return NotFound();
+            }
+
+            shelterModel.Name = updateDTO.Name;
+            shelterModel.Latitude = updateDTO.Latidude;
+            shelterModel.Longitude = updateDTO.Longitude;
+            shelterModel.Capacity = updateDTO.Capacity;
+            shelterModel.Occupants = updateDTO.Occupants;
+            shelterModel.Address = updateDTO.Address;
+            shelterModel.Available = updateDTO.Available;
+
+            _context.SaveChanges();
+
+            return Ok(shelterModel.ToShelterDTO());
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public IActionResult Delete([FromRoute] int id)
+        {
+            var shelterModel = _context.Shelter.FirstOrDefault(x => x.Id == id);
+
+            if (shelterModel == null)
+            {
+                return NotFound();
+            }
+
+            _context.Shelter.Remove(shelterModel);
+
+            _context.SaveChanges();
+
+            return NoContent();
+        }
     }
 }
