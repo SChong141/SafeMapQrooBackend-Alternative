@@ -10,6 +10,6 @@ namespace SafeMapQROO.Interface
 {
     public interface IRegisterRepository
     {
-        public Task<NewUserDto> RegisterNewUserAsyn(AppUser registerNew, string role, string password);
+        Task<NewUserDto> RegisterNewUserAsyn(AppUser registerNew, string role, string password);
     }
 }
