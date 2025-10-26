@@ -10,7 +10,7 @@ using SafeMapQROOBackend.Data;
 namespace SafeMapQROOBackend.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20251016155442_Init")]
+    [Migration("20251026215301_Init")]
     partial class Init
     {
         /// <inheritdoc />

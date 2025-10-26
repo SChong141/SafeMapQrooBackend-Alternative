@@ -7,6 +7,8 @@ using SafeMapQROOBackend.Data;
 using SafeMapQROOBackend.Mappers;
 using SafeMapQROOBackend.Models;
 using SafeMapQROOBackend.Dtos.Shelter;
+using Microsoft.EntityFrameworkCore;
+using SafeMapQROOBackend.Interfaces;
 
 namespace SafeMapQROOBackend.Controllers
 {
@@ -15,23 +17,27 @@ namespace SafeMapQROOBackend.Controllers
     public class ShelterController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
-        public ShelterController(ApplicationDBContext context)
+        private readonly IShelterRepository _shelterRepo;
+        public ShelterController(ApplicationDBContext context, IShelterRepository shelterRepo)
         {
+            _shelterRepo = shelterRepo;
             _context = context;
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var shelters = _context.Shelter.ToList().Select(s => s.ToShelterDTO());
+            var shelters = await _shelterRepo.GetAllAsync();
+
+            var shelterDTO = shelters.Select(s => s.ToShelterDTO());
 
             return Ok(shelters);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById([FromRoute] int id)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var shelters = _context.Shelter.Find(id);
+            var shelters = await _shelterRepo.GetByIdAsync(id);
 
             if (shelters == null)
             {
@@ -42,52 +48,39 @@ namespace SafeMapQROOBackend.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] CreateShelterRequestDTO shelterDTO)
+        public async Task<IActionResult> Create([FromBody] CreateShelterRequestDTO shelterDTO)
         {
             var shelterModel = shelterDTO.ToShelterFromCreateDTO();
-            _context.Shelter.Add(shelterModel);
-            _context.SaveChanges();
+
+            await _shelterRepo.CreateAsync(shelterModel);
+
             return CreatedAtAction(nameof(GetById), new { id = shelterModel.Id }, shelterModel.ToShelterDTO());
         }
 
         [HttpPut]
         [Route("{id}")]
-        public IActionResult Update([FromRoute] int id, [FromBody] UpdateShelterRequestDTO updateDTO)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateShelterRequestDTO updateDTO)
         {
-            var shelterModel = _context.Shelter.FirstOrDefault(x => x.Id == id);
+            var shelterModel = await _shelterRepo.UpdateAsync(id, updateDTO);
 
             if (shelterModel == null)
             {
                 return NotFound();
             }
-
-            shelterModel.Name = updateDTO.Name;
-            shelterModel.Latitude = updateDTO.Latidude;
-            shelterModel.Longitude = updateDTO.Longitude;
-            shelterModel.Capacity = updateDTO.Capacity;
-            shelterModel.Occupants = updateDTO.Occupants;
-            shelterModel.Address = updateDTO.Address;
-            shelterModel.Available = updateDTO.Available;
-
-            _context.SaveChanges();
 
             return Ok(shelterModel.ToShelterDTO());
         }
 
         [HttpDelete]
         [Route("{id}")]
-        public IActionResult Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var shelterModel = _context.Shelter.FirstOrDefault(x => x.Id == id);
+            var shelterModel = await _shelterRepo.DeleteAsync(id);
 
             if (shelterModel == null)
             {
                 return NotFound();
             }
-
-            _context.Shelter.Remove(shelterModel);
-
-            _context.SaveChanges();
 
             return NoContent();
         }
