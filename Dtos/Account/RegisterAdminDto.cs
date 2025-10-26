@@ -24,14 +24,13 @@ namespace SafeMapQROO.Dtos
             get
             {
                 int FirstName = Names.IndexOf(' ');
-                int LastName = Lastname.IndexOf(' ');
-                if (FirstName != -1 && LastName != -1)
+                if (FirstName != -1)
                 {
-                    return $"{Names.Substring(0, FirstName)}{Lastname.Substring(0, LastName)}";
+                    return $"{Names.Substring(0, FirstName)}{Lastname.Replace(" ", "")}";
                 }
                 else
                 {
-                    return Names;
+                    return Names.Replace(" ", "");
                 }
                 ;
 

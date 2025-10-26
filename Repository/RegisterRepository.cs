@@ -47,7 +47,15 @@ namespace SafeMapQROO.Repository
             }
         }
 
-
-
+        public async Task<AppUser> NewPasswordAsync(string Email, string newPassword)
+        {
+            var ExistUser = await _userManager.FindByEmailAsync(Email);
+            if (ExistUser == null) return null;
+            var removeResult = await _userManager.RemovePasswordAsync(ExistUser);
+            if (!removeResult.Succeeded) return null;
+            var Resultpass = await _userManager.AddPasswordAsync(ExistUser, newPassword);
+            if (!Resultpass.Succeeded) return null;
+            return ExistUser;
+        }
     }
 }

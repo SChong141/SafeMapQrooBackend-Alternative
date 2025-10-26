@@ -25,7 +25,8 @@ namespace SafeMapQROO.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var UsersModel = await _userRepo.GetAllUsersAsync();
-            return Ok(UsersModel);
+            var UserDto = UsersModel.Select(x => x.ToUserDto()).ToList();
+            return Ok(UserDto);
         }
 
         [HttpGet("{Email}")]

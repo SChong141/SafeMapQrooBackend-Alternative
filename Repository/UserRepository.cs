@@ -48,7 +48,7 @@ namespace SafeMapQROO.Repository
             Exist.Names = user.Names;
             Exist.Lastname = user.Lastname;
             Exist.Email = Email;
-            Exist.Curp = user.Curp;
+            Exist.Curp = user.Curp.ToUpper();
             await _userManager.UpdateAsync(Exist);
             return Exist;
         }

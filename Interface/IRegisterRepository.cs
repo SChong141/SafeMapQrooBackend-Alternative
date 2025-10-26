@@ -11,5 +11,6 @@ namespace SafeMapQROO.Interface
     public interface IRegisterRepository
     {
         Task<NewUserDto> RegisterNewUserAsyn(AppUser registerNew, string role, string password);
+        Task<AppUser?> NewPasswordAsync(string Email, string password);
     }
 }

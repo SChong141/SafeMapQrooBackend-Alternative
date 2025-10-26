@@ -28,6 +28,7 @@ namespace SafeMapQROO.Mappers
                 Names = userDto.Names,
                 Lastname = userDto.Lastname,
                 Curp = userDto.Curp,
+                Email = userDto.Email
             };
 
 

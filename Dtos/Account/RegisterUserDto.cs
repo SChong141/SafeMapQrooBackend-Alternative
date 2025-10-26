@@ -17,6 +17,7 @@ namespace SafeMapQROO.Dtos.Account
         public string? Lastname { get; set; }
 
         [Required]
+        [RegularExpression(@"^[a-zA-Z0-9]{18}$", ErrorMessage = "Must contain exactly 18 alphanumeric characters")]
         public string? Curp { get; set; }
 
         //Talvez se quite 

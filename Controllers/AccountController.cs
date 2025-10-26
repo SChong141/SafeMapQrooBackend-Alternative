@@ -120,5 +120,13 @@ namespace SafeMapQROO.Controllers
 
             }
         }
+        [HttpPut("NewPassword{Email}")]
+        public async Task<IActionResult> UpdatePassword([FromRoute] string Email, [FromBody] NewPasswordDto newPassword)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var Resultpass = await _register.NewPasswordAsync(Email, newPassword.Password);
+            if (Resultpass == null) return BadRequest("Error");
+            return NoContent();
+        }
     }
 }
