@@ -10,7 +10,7 @@ using SafeMapQROO.Mappers;
 
 namespace SafeMapQROO.Controllers
 {
-    [Route("api/user")]
+    [Route("api/users")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -29,33 +29,33 @@ namespace SafeMapQROO.Controllers
             return Ok(UserDto);
         }
 
-        [HttpGet("{Email}")]
-        public async Task<IActionResult> GetByEmail([FromRoute] string Email)
+        [HttpGet("{Id}")]
+        public async Task<IActionResult> GetById([FromRoute] string Id)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var User = await _userRepo.GetByEmailAsync(Email);
+            var User = await _userRepo.GetByIdAsync(Id);
             if (User == null) return NotFound();
             return Ok(User.ToUserDto());
         }
 
         [HttpPut]
-        [Route("{Email}")]
-        public async Task<IActionResult> UpdateUser([FromRoute] string Email, [FromBody] UpdateUserDto User)
+        [Route("{Id}")]
+        public async Task<IActionResult> UpdateUser([FromRoute] string Id, [FromBody] UpdateUserDto User)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var userModel = _userRepo.UpdateUserAcync(Email, User.ToUserFromUpdate());
+            var userModel = _userRepo.UpdateUserAcync(Id, User.ToUserFromUpdate());
             if (userModel == null) return BadRequest("User not found");
-            return Ok(userModel);
+            return Ok(userModel.Result.ToUserDto());
         }
 
         [HttpDelete]
-        [Route("{Email}")]
-        public async Task<IActionResult> DeleteUser([FromRoute] string Email)
+        [Route("{Id}")]
+        public async Task<IActionResult> DeleteUser([FromRoute] string Id)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var Exist = await _userRepo.DeleteUserAsync(Email);
+            var Exist = await _userRepo.DeleteUserAsync(Id);
             if (Exist == null) return NotFound("User not found");
-            return Ok(Exist);
+            return Ok("User Delete");
 
         }
 

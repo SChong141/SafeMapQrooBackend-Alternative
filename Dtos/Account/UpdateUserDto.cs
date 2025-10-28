@@ -8,12 +8,26 @@ namespace SafeMapQROO.Dtos.Account
 {
     public class UpdateUserDto
     {
-        [RegularExpression(@"^[a-zA-Z0-9]{18}$", ErrorMessage = "Must contain exactly 18 alphanumeric characters")]
-
-        public string? Curp { get; set; }
+        [Required]
         public string? Names { get; set; }
+        [Required]
         public string? Lastname { get; set; }
-        [EmailAddress]
-        public string? Email { get; set; }
+        public string UserName
+        {
+            get
+            {
+                int FirstName = Names.IndexOf(' ');
+                if (FirstName != -1)
+                {
+                    return $"{Names.Substring(0, FirstName)}{Lastname.Replace(" ", "")}";
+                }
+                else
+                {
+                    return $"{Names.Replace(" ", "")}{Lastname.Replace(" ", "")}";
+                }
+                ;
+
+            }
+        }
     }
 }

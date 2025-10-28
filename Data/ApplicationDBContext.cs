@@ -35,9 +35,16 @@ namespace SafeMapQROOBackend.Data
         new IdentityRole
         {
             Id="2",
+              Name = "Employee",
+              NormalizedName="EMPLOYEE"
+          },
+        new IdentityRole
+        {
+            Id="3",
               Name = "User",
               NormalizedName="USER"
           }
+
         };
       builder.Entity<IdentityRole>().HasData(roles);
     }

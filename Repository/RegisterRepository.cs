@@ -21,7 +21,7 @@ namespace SafeMapQROO.Repository
             _tokenService = tokenService;
         }
 
-        public async Task<NewUserDto> RegisterNewUserAsyn(AppUser registerNew, string role, string password)
+        public async Task<InfoUserDto?> RegisterNewUserAsyn(AppUser registerNew, string role, string password)
         {
             var createUser = await _userManager.CreateAsync(registerNew, password);
             if (createUser.Succeeded)
@@ -29,7 +29,7 @@ namespace SafeMapQROO.Repository
                 var roleResult = await _userManager.AddToRoleAsync(registerNew, role);
                 if (roleResult.Succeeded)
                 {
-                    return new NewUserDto
+                    return new InfoUserDto
                     {
                         UserName = registerNew.UserName,
                         Email = registerNew.Email,
@@ -47,7 +47,7 @@ namespace SafeMapQROO.Repository
             }
         }
 
-        public async Task<AppUser> NewPasswordAsync(string Email, string newPassword)
+        public async Task<AppUser?> NewPasswordAsync(string Email, string newPassword)
         {
             var ExistUser = await _userManager.FindByEmailAsync(Email);
             if (ExistUser == null) return null;

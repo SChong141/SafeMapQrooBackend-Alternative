@@ -19,9 +19,9 @@ namespace SafeMapQROO.Repository
             _userManager = userManager;
 
         }
-        public async Task<AppUser?> DeleteUserAsync(string Email)
+        public async Task<AppUser?> DeleteUserAsync(string id)
         {
-            var Exist = await _userManager.FindByEmailAsync(Email);
+            var Exist = await _userManager.FindByIdAsync(id);
             if (Exist == null) return null;
             var Delite = await _userManager.DeleteAsync(Exist);
             if (Delite.Succeeded)
@@ -36,19 +36,18 @@ namespace SafeMapQROO.Repository
             return await _userManager.Users.ToListAsync();
         }
 
-        public async Task<AppUser?> GetByEmailAsync(string Email)
+        public async Task<AppUser?> GetByIdAsync(string id)
         {
-            return await _userManager.FindByEmailAsync(Email);
+            return await _userManager.FindByIdAsync(id);
         }
 
-        public async Task<AppUser?> UpdateUserAcync(string Email, AppUser user)
+        public async Task<AppUser?> UpdateUserAcync(string id, AppUser user)
         {
-            var Exist = await _userManager.FindByEmailAsync(Email);
+            var Exist = await _userManager.FindByIdAsync(id);
             if (Exist == null) return null;
             Exist.Names = user.Names;
             Exist.Lastname = user.Lastname;
-            Exist.Email = Email;
-            Exist.Curp = user.Curp.ToUpper();
+            Exist.UserName = user.UserName;
             await _userManager.UpdateAsync(Exist);
             return Exist;
         }

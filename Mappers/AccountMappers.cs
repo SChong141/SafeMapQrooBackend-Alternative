@@ -13,10 +13,10 @@ namespace SafeMapQROO.Mappers
         {
             return new UserDto
             {
+                Id = appUser.Id,
+                UserName = appUser.UserName,
                 Names = appUser.Names,
                 Lastname = appUser.Lastname,
-                Curp = appUser.Curp,
-                Email = appUser.Email,
             };
 
 
@@ -27,8 +27,7 @@ namespace SafeMapQROO.Mappers
             {
                 Names = userDto.Names,
                 Lastname = userDto.Lastname,
-                Curp = userDto.Curp,
-                Email = userDto.Email
+                UserName = userDto.UserName,
             };
 
 

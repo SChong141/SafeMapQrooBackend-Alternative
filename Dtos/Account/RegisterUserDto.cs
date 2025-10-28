@@ -15,13 +15,6 @@ namespace SafeMapQROO.Dtos.Account
         public string? Names { get; set; }
         [Required]
         public string? Lastname { get; set; }
-
-        [Required]
-        [RegularExpression(@"^[a-zA-Z0-9]{18}$", ErrorMessage = "Must contain exactly 18 alphanumeric characters")]
-        public string? Curp { get; set; }
-
-        //Talvez se quite 
-        //Es nesesario email ?
         [Required]
         [EmailAddress]
         public string? Email { get; set; }
@@ -40,7 +33,7 @@ namespace SafeMapQROO.Dtos.Account
                 }
                 else
                 {
-                    return Names.Replace(" ", "");
+                    return $"{Names.Replace(" ", "")}{Lastname.Replace(" ", "")}";
                 }
                 ;
 

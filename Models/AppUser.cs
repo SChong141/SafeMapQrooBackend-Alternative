@@ -11,6 +11,5 @@ namespace SafeMapQROO.Models
 
         public string Names { get; set; }
         public string Lastname { get; set; }
-        public string? Curp { get; set; }
     }
 }

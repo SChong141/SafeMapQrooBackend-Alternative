@@ -9,9 +9,9 @@ namespace SafeMapQROO.Interface
     public interface IUserRepository
     {
         Task<List<AppUser>> GetAllUsersAsync();
-        Task<AppUser?> GetByEmailAsync(string Email);
-        Task<AppUser?> UpdateUserAcync(string Email, AppUser user);
-        Task<AppUser?> DeleteUserAsync(string Email);
+        Task<AppUser?> GetByIdAsync(string id);
+        Task<AppUser?> UpdateUserAcync(string id, AppUser user);
+        Task<AppUser?> DeleteUserAsync(string id);
 
 
 

@@ -45,7 +45,7 @@ namespace SafeMapQROO.Controllers
                 return Unauthorized("Username not found and/or password incorrect");
 
 
-            return Ok(new NewUserDto
+            return Ok(new InfoUserDto
             {
                 UserName = User.UserName,
                 Email = User.Email,
@@ -55,7 +55,7 @@ namespace SafeMapQROO.Controllers
 
         }
 
-        [HttpPost("register")]
+        [HttpPost("registerCitizen")]
         public async Task<IActionResult> Register([FromBody] RegisterUserDto regiUserDto)
         {
             try
@@ -72,7 +72,6 @@ namespace SafeMapQROO.Controllers
                     Names = regiUserDto.Names,
                     Lastname = regiUserDto.Lastname,
                     Email = regiUserDto.Email,
-                    Curp = regiUserDto.Curp.ToUpper(),
                 };
 
                 var registerUser = await _register.RegisterNewUserAsyn(appUser, "User", regiUserDto.Password);
@@ -90,25 +89,56 @@ namespace SafeMapQROO.Controllers
         }
         [HttpPost("registerAdmin")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> RegisterAdmin([FromBody] RegisterAdminDto regiAdminDto)
+        public async Task<IActionResult> RegisterAdmin([FromBody] RegisterUserDto userDto)
         {
             try
             {
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
-                var ExistUser = await _userManager.FindByEmailAsync(regiAdminDto.Email);
+                var ExistUser = await _userManager.FindByEmailAsync(userDto.Email);
                 if (ExistUser != null) return BadRequest("Email Exist");
 
 
                 var appUser = new AppUser
                 {
-                    UserName = regiAdminDto.UserName,
-                    Names = regiAdminDto.Names,
-                    Lastname = regiAdminDto.Lastname,
-                    Email = regiAdminDto.Email,
+                    UserName = userDto.UserName,
+                    Names = userDto.Names,
+                    Lastname = userDto.Lastname,
+                    Email = userDto.Email,
                 };
 
-                var registerUser = await _register.RegisterNewUserAsyn(appUser, "Admin", regiAdminDto.Password);
+                var registerUser = await _register.RegisterNewUserAsyn(appUser, "Admin", userDto.Password);
+
+                if (registerUser == null) return BadRequest(registerUser);
+
+                return Ok(registerUser);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+
+            }
+        }
+        [HttpPost("registerEmployee")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> RegisterEmployee([FromBody] RegisterUserDto userDto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+                var ExistUser = await _userManager.FindByEmailAsync(userDto.Email);
+                if (ExistUser != null) return BadRequest("Email Exist");
+
+
+                var appUser = new AppUser
+                {
+                    UserName = userDto.UserName,
+                    Names = userDto.Names,
+                    Lastname = userDto.Lastname,
+                };
+
+                var registerUser = await _register.RegisterNewUserAsyn(appUser, "Employee", userDto.Password);
 
                 if (registerUser == null) return BadRequest(registerUser);
 

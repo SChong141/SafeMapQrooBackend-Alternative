@@ -52,6 +52,12 @@ namespace SafeMapQROOBackend.Migrations
                         new
                         {
                             Id = "2",
+                            Name = "Employee",
+                            NormalizedName = "EMPLOYEE"
+                        },
+                        new
+                        {
+                            Id = "3",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -169,9 +175,6 @@ namespace SafeMapQROOBackend.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Curp")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
