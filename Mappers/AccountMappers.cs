@@ -19,6 +19,17 @@ namespace SafeMapQROO.Mappers
                 Lastname = appUser.Lastname,
             };
 
+        }
+
+        public static UserDto ToRetunUserDto(this AppUser appUser)
+        {
+            return new UserDto
+            {
+                UserName = appUser.UserName,
+                Names = appUser.Names,
+                Lastname = appUser.Lastname,
+            };
+
 
         }
         public static AppUser ToUserFromUpdate(this UpdateUserDto userDto)

@@ -35,7 +35,7 @@ namespace SafeMapQROO.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var User = await _userRepo.GetByIdAsync(Id);
             if (User == null) return NotFound();
-            return Ok(User.ToUserDto());
+            return Ok(User.ToRetunUserDto());
         }
 
         [HttpPut]
@@ -45,7 +45,7 @@ namespace SafeMapQROO.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var userModel = _userRepo.UpdateUserAcync(Id, User.ToUserFromUpdate());
             if (userModel == null) return BadRequest("User not found");
-            return Ok(userModel.Result.ToUserDto());
+            return Ok(userModel.Result.ToRetunUserDto());
         }
 
         [HttpDelete]
