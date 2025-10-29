@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace SafeMapQROOBackend.Migrations
 {
     /// <inheritdoc />
@@ -174,6 +176,16 @@ namespace SafeMapQROOBackend.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "27392b4a-0181-4987-a1f2-70235d62f6a6", null, "Admin", "ADMIN" },
+                    { "9f79b43f-4cb4-423a-9df6-de3b5150446b", null, "Organizer", "ORGANIZER" },
+                    { "a857fd2d-6e33-4451-a362-12240cddede5", null, "User", "USER" }
                 });
 
             migrationBuilder.CreateIndex(
