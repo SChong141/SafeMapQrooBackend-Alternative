@@ -31,7 +31,7 @@ namespace SafeMapQROOBackend.Controllers
 
             var shelterDTO = shelters.Select(s => s.ToShelterDTO());
 
-            return Ok(shelters);
+            return Ok(shelterDTO);
         }
 
         [HttpGet("{id}")]
