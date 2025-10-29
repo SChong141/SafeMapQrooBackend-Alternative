@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SafeMapQROOBackend.Data;
+using SafeMapQROOBackend.Dtos.Shelter;
 using SafeMapQROOBackend.Mappers;
 using SafeMapQROOBackend.Models;
-using SafeMapQROOBackend.Dtos.Shelter;
-using Microsoft.EntityFrameworkCore;
 
 namespace SafeMapQROOBackend.Controllers
 {
@@ -25,13 +26,13 @@ namespace SafeMapQROOBackend.Controllers
         public async Task<IActionResult> GetAll()
         {
             var shelters = await _context.Shelter.ToListAsync();
-            
+
             var shelterDTO = shelters.Select(s => s.ToShelterDTO());
 
             return Ok(shelters);
         }
-
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin,Employee,User")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var shelters = await _context.Shelter.FindAsync(id);
@@ -45,6 +46,7 @@ namespace SafeMapQROOBackend.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromBody] CreateShelterRequestDTO shelterDTO)
         {
             var shelterModel = shelterDTO.ToShelterFromCreateDTO();
@@ -55,6 +57,7 @@ namespace SafeMapQROOBackend.Controllers
 
         [HttpPut]
         [Route("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateShelterRequestDTO updateDTO)
         {
             var shelterModel = await _context.Shelter.FirstOrDefaultAsync(x => x.Id == id);
@@ -79,6 +82,7 @@ namespace SafeMapQROOBackend.Controllers
 
         [HttpDelete]
         [Route("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var shelterModel = await _context.Shelter.FirstOrDefaultAsync(x => x.Id == id);

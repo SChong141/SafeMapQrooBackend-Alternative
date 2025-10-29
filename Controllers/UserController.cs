@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SafeMapQROO.Dtos.Account;
@@ -21,6 +22,8 @@ namespace SafeMapQROO.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> GetAll()
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -30,6 +33,8 @@ namespace SafeMapQROO.Controllers
         }
 
         [HttpGet("{Id}")]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> GetById([FromRoute] string Id)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -40,6 +45,8 @@ namespace SafeMapQROO.Controllers
 
         [HttpPut]
         [Route("{Id}")]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> UpdateUser([FromRoute] string Id, [FromBody] UpdateUserDto User)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -50,6 +57,7 @@ namespace SafeMapQROO.Controllers
 
         [HttpDelete]
         [Route("{Id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser([FromRoute] string Id)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);

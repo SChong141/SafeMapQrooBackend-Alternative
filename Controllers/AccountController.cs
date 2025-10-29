@@ -49,7 +49,7 @@ namespace SafeMapQROO.Controllers
             {
                 UserName = User.UserName,
                 Email = User.Email,
-                Token = _tokenService.CreateToken(User)
+                Token = await _tokenService.CreateToken(User)
 
             });
 
@@ -151,6 +151,8 @@ namespace SafeMapQROO.Controllers
             }
         }
         [HttpPut("NewPassword{Email}")]
+        [Authorize(Roles = "Admin,Employee,User")]
+
         public async Task<IActionResult> UpdatePassword([FromRoute] string Email, [FromBody] NewPasswordDto newPassword)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);

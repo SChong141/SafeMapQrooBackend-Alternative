@@ -33,7 +33,7 @@ namespace SafeMapQROO.Repository
                     {
                         UserName = registerNew.UserName,
                         Email = registerNew.Email,
-                        Token = _tokenService.CreateToken(registerNew)
+                        Token = await _tokenService.CreateToken(registerNew)
                     };
                 }
                 else
