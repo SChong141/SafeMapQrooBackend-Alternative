@@ -46,3 +46,8 @@ msbuild.log
 msbuild.err
 msbuild.wrn
 .fake
+
+# Useful Commands
+# dotnet ef migrations add Init
+# dotnet ef migrations add Identity
+# dotnet ef database update
