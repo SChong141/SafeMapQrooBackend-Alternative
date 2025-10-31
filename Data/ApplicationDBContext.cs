@@ -28,30 +28,24 @@ namespace SafeMapQROOBackend.Data
             {
                 new IdentityRole
                 {
+                    Id = "1",
                     Name = "Admin",
                     NormalizedName = "ADMIN"
                 },
                 new IdentityRole
                 {
+                    Id = "2",
                     Name = "Organizer",
                     NormalizedName = "ORGANIZER"
                 },
                 new IdentityRole
                 {
+                    Id = "3",
                     Name = "User",
                     NormalizedName = "USER"
                 },
             };
             builder.Entity<IdentityRole>().HasData(roles);
-        }
-
-        // ef migrations error workaround, otherwise dotnet ef database update won't complete
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-
-            optionsBuilder.ConfigureWarnings(warnings =>
-            warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
         }
     }
 }

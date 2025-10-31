@@ -11,7 +11,7 @@ using SafeMapQROOBackend.Data;
 namespace SafeMapQROOBackend.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20251029062118_Init")]
+    [Migration("20251031035849_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -48,19 +48,19 @@ namespace SafeMapQROOBackend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "27392b4a-0181-4987-a1f2-70235d62f6a6",
+                            Id = "1",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "9f79b43f-4cb4-423a-9df6-de3b5150446b",
+                            Id = "2",
                             Name = "Organizer",
                             NormalizedName = "ORGANIZER"
                         },
                         new
                         {
-                            Id = "a857fd2d-6e33-4451-a362-12240cddede5",
+                            Id = "3",
                             Name = "User",
                             NormalizedName = "USER"
                         });

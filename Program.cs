@@ -7,6 +7,7 @@ using SafeMapQROOBackend.Data;
 using SafeMapQROOBackend.Interfaces;
 using SafeMapQROOBackend.Models;
 using SafeMapQROOBackend.Repository;
+using SafeMapQROOBackend.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,6 +48,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddScoped<IShelterRepository, ShelterRepository>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 var app = builder.Build();
 

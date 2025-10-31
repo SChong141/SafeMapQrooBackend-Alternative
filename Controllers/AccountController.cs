@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SafeMapQROOBackend.Dtos.Account;
+using SafeMapQROOBackend.Interfaces;
 using SafeMapQROOBackend.Models;
 
 namespace SafeMapQROOBackend.Controllers
@@ -14,9 +15,11 @@ namespace SafeMapQROOBackend.Controllers
     public class AccountController : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;
-        public AccountController(UserManager<AppUser> userManager)
+        private readonly ITokenService _tokenService;
+        public AccountController(UserManager<AppUser> userManager, ITokenService tokenService)
         {
             _userManager = userManager;
+            _tokenService = tokenService;
         }
 
         [HttpPost("register")]
@@ -43,7 +46,14 @@ namespace SafeMapQROOBackend.Controllers
 
                     if (roleResult.Succeeded)
                     {
-                        return Ok("User created");
+                        return Ok(
+                            new NewUserDTO
+                            {
+                                UserName = appUser.UserName,
+                                Email = appUser.Email,
+                                Token = await _tokenService.CreateToken(appUser)
+                            }
+                        );
                     }
                     else
                     {
