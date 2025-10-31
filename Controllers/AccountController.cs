@@ -33,11 +33,11 @@ namespace SafeMapQROOBackend.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == loginDTO.Username.ToLower());
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == loginDTO.Email.ToLower());
 
             if (user == null)
             {
-                return Unauthorized("Invalid username.");
+                return Unauthorized("Invalid user.");
             }
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginDTO.Password, false);
