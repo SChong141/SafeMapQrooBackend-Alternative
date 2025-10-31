@@ -9,6 +9,7 @@ using SafeMapQROOBackend.Models;
 using SafeMapQROOBackend.Dtos.Shelter;
 using Microsoft.EntityFrameworkCore;
 using SafeMapQROOBackend.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SafeMapQROOBackend.Controllers
 {
