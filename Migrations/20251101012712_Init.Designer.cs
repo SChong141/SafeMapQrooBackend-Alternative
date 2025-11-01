@@ -11,7 +11,7 @@ using SafeMapQROOBackend.Data;
 namespace SafeMapQROOBackend.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20251031045527_Init")]
+    [Migration("20251101012712_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -57,12 +57,6 @@ namespace SafeMapQROOBackend.Migrations
                             Id = "2",
                             Name = "Organizer",
                             NormalizedName = "ORGANIZER"
-                        },
-                        new
-                        {
-                            Id = "3",
-                            Name = "User",
-                            NormalizedName = "USER"
                         });
                 });
 
@@ -267,6 +261,44 @@ namespace SafeMapQROOBackend.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Shelter");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Address = "Dirección de prueba",
+                            Available = true,
+                            Capacity = 100,
+                            Deleted = false,
+                            Latitude = -52.457299999999996,
+                            Longitude = 17.927399999999999,
+                            Name = "Abergue 1",
+                            Occupants = 0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Address = "Otra dirección de prueba",
+                            Available = true,
+                            Capacity = 200,
+                            Deleted = false,
+                            Latitude = 19.413,
+                            Longitude = -20.590800000000002,
+                            Name = "Abergue 2",
+                            Occupants = 0
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Address = "Otra otra irección de prueba",
+                            Available = true,
+                            Capacity = 300,
+                            Deleted = false,
+                            Latitude = -63.502299999999998,
+                            Longitude = 79.467799999999997,
+                            Name = "Abergue 3",
+                            Occupants = 0
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

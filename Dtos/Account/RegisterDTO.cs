@@ -15,5 +15,13 @@ namespace SafeMapQROOBackend.Dtos.Account
         public string? Email { get; set; }
         [Required]
         public string? Password { get; set; }
+        [Required]
+        public AllowedRoles Role { get; set; }
+    }
+
+    public enum AllowedRoles
+    {
+        Admin = 1,
+        Organizer = 2,
     }
 }

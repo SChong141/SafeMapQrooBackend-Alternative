@@ -184,8 +184,17 @@ namespace SafeMapQROOBackend.Migrations
                 values: new object[,]
                 {
                     { "1", null, "Admin", "ADMIN" },
-                    { "2", null, "Organizer", "ORGANIZER" },
-                    { "3", null, "User", "USER" }
+                    { "2", null, "Organizer", "ORGANIZER" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Shelter",
+                columns: new[] { "Id", "Address", "Available", "Capacity", "Deleted", "Latitude", "Longitude", "Name", "Occupants" },
+                values: new object[,]
+                {
+                    { 1, "Dirección de prueba", true, 100, false, -52.457299999999996, 17.927399999999999, "Abergue 1", 0 },
+                    { 2, "Otra dirección de prueba", true, 200, false, 19.413, -20.590800000000002, "Abergue 2", 0 },
+                    { 3, "Otra otra irección de prueba", true, 300, false, -63.502299999999998, 79.467799999999997, "Abergue 3", 0 }
                 });
 
             migrationBuilder.CreateIndex(

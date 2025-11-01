@@ -37,15 +37,50 @@ namespace SafeMapQROOBackend.Data
                     Id = "2",
                     Name = "Organizer",
                     NormalizedName = "ORGANIZER"
-                },
-                new IdentityRole
-                {
-                    Id = "3",
-                    Name = "User",
-                    NormalizedName = "USER"
-                },
+                }
             };
             builder.Entity<IdentityRole>().HasData(roles);
+
+            List<Shelter> shelters = new List<Shelter>
+            {
+                new Shelter
+                {
+                    Id = 1,
+                    Name = "Abergue 1",
+                    Latitude = -52.4573,
+                    Longitude = 17.9274,
+                    Capacity = 100,
+                    Occupants = 0,
+                    Address = "Dirección de prueba",
+                    Available = true,
+                    Deleted = false,
+                },
+                new Shelter
+                {
+                    Id = 2,
+                    Name = "Abergue 2",
+                    Latitude = 19.4130,
+                    Longitude = -20.5908,
+                    Capacity = 200,
+                    Occupants = 0,
+                    Address = "Otra dirección de prueba",
+                    Available = true,
+                    Deleted = false,
+                },
+                new Shelter
+                {
+                    Id = 3,
+                    Name = "Abergue 3",
+                    Latitude = -63.5023,
+                    Longitude = 79.4678,
+                    Capacity = 300,
+                    Occupants = 0,
+                    Address = "Otra otra irección de prueba",
+                    Available = true,
+                    Deleted = false,
+                }
+            };
+            builder.Entity<Shelter>().HasData(shelters);
         }
     }
 }

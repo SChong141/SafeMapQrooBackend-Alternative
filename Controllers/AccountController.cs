@@ -78,7 +78,7 @@ namespace SafeMapQROOBackend.Controllers
 
                 if (updateUser.Succeeded)
                 {
-                    var roleResult = await _userManager.AddToRoleAsync(appUser, "User");
+                    var roleResult = await _userManager.AddToRoleAsync(appUser, Convert.ToString(registerDTO.Role));
 
                     if (roleResult.Succeeded)
                     {
