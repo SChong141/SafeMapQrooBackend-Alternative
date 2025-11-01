@@ -48,8 +48,9 @@ namespace SafeMapQROOBackend.Controllers
             }
 
             return Ok(
-                new NewUserDTO
+                new NewLoginDTO
                 {
+                    Id = user.Id,
                     UserName = user.UserName,
                     Email = user.Email,
                     Token = await _tokenService.CreateToken(user)
@@ -73,17 +74,18 @@ namespace SafeMapQROOBackend.Controllers
                     Email = registerDTO.Email
                 };
 
-                var createdUser = await _userManager.CreateAsync(appUser, registerDTO.Password);
+                var updateUser = await _userManager.CreateAsync(appUser, registerDTO.Password);
 
-                if (createdUser.Succeeded)
+                if (updateUser.Succeeded)
                 {
                     var roleResult = await _userManager.AddToRoleAsync(appUser, "User");
 
                     if (roleResult.Succeeded)
                     {
                         return Ok(
-                            new NewUserDTO
+                            new NewLoginDTO
                             {
+                                Id = appUser.Id,
                                 UserName = appUser.UserName,
                                 Email = appUser.Email,
                                 Token = await _tokenService.CreateToken(appUser)
@@ -97,7 +99,51 @@ namespace SafeMapQROOBackend.Controllers
                 }
                 else
                 {
-                    return StatusCode(500, createdUser.Errors);
+                    return StatusCode(500, updateUser.Errors);
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e);
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody] UpdateDTO updateDTO)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var user = await _userManager.FindByIdAsync(updateDTO.Id);
+
+                if (user == null)
+                {
+                    return Unauthorized("Invalid user.");
+                }
+
+                user.UserName = updateDTO.UserName;
+                user.Email = updateDTO.Email;
+                
+                var updatedUser = await _userManager.UpdateAsync(user);
+
+                if (updatedUser.Succeeded)
+                {
+                    return Ok(
+                        new UpdateDTO
+                        {
+                            Id = user.Id,
+                            UserName = user.UserName,
+                            Email = user.Email
+                        }
+                    );
+                }
+                else
+                {
+                    return StatusCode(500, updatedUser.Errors);
                 }
             }
             catch (Exception e)
