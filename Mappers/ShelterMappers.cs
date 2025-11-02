@@ -22,7 +22,8 @@ namespace SafeMapQROOBackend.Mappers
                 Address = shelterModel.Address,
                 Municipality = shelterModel.Municipality,
                 Available = shelterModel.Available,
-                CreatedAt = shelterModel.CreatedAt
+                CreatedAt = shelterModel.CreatedAt,
+                Occupancy = shelterModel.Occupancy.Select(c => c.ToOccupancyDTO()).ToList()
             };
         }
 

@@ -17,6 +17,12 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
 
+// Newtonsoft to handle json object cycles
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+{
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+});
+
 // Enum description converter for constrained fields
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
@@ -86,7 +92,9 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+// Dependency Injection for repositories and services
 builder.Services.AddScoped<IShelterRepository, ShelterRepository>();
+builder.Services.AddScoped<IOccupancyRepository, OccupancyRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 
 var app = builder.Build();

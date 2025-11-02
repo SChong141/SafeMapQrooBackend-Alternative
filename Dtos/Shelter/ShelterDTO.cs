@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SafeMapQROOBackend.Dtos.Occupancy;
 using SafeMapQROOBackend.Models;
 
 namespace SafeMapQROOBackend.Dtos.Shelter
@@ -17,5 +18,6 @@ namespace SafeMapQROOBackend.Dtos.Shelter
         public Municipalities Municipality { get; set; }
         public bool Available { get; set; }
         public DateTime CreatedAt { get; set; }
+        public List<OccupancyDTO> Occupancy { get; set; }
     }
 }

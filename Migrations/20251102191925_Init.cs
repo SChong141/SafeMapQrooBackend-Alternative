@@ -178,6 +178,25 @@ namespace SafeMapQROOBackend.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Occupancy",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    CurrentOccupancy = table.Column<int>(type: "INTEGER", nullable: false),
+                    UpdatedOn = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    ShelterId = table.Column<Guid>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Occupancy", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Occupancy_Shelter_ShelterId",
+                        column: x => x.ShelterId,
+                        principalTable: "Shelter",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
@@ -233,6 +252,11 @@ namespace SafeMapQROOBackend.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Occupancy_ShelterId",
+                table: "Occupancy",
+                column: "ShelterId");
         }
 
         /// <inheritdoc />
@@ -254,13 +278,16 @@ namespace SafeMapQROOBackend.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Shelter");
+                name: "Occupancy");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Shelter");
         }
     }
 }

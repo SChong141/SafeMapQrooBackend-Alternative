@@ -20,6 +20,7 @@ namespace SafeMapQROOBackend.Data
         }
         
         public DbSet<Shelter> Shelter { get; set; }
+        public DbSet<Occupancy> Occupancy { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

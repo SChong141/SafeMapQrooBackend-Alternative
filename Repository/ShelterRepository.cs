@@ -41,12 +41,17 @@ namespace SafeMapQROOBackend.Repository
 
         public async Task<List<Shelter>> GetAllAsync()
         {
-            return await _context.Shelter.ToListAsync();
+            return await _context.Shelter.Include(c => c.Occupancy).ToListAsync();
         }
 
         public async Task<Shelter?> GetByIdAsync(Guid id)
         {
-            return await _context.Shelter.FindAsync(id);
+            return await _context.Shelter.Include(c => c.Occupancy).FirstOrDefaultAsync(i => i.Id == id);
+        }
+
+        public async Task<Shelter?> ShelterExist(Guid id)
+        {
+            return await _context.Shelter.FirstOrDefaultAsync(s => s.Id == id);
         }
 
         public async Task<Shelter?> UpdateAsync(Guid id, UpdateShelterRequestDTO shelterDTO)

@@ -14,5 +14,6 @@ namespace SafeMapQROOBackend.Interfaces
         Task<Shelter> CreateAsync(Shelter shelterModel);
         Task<Shelter?> UpdateAsync(Guid id, UpdateShelterRequestDTO shelterDTO);
         Task<Shelter?> DeleteAsync(Guid id);
+        Task<Shelter?> ShelterExist(Guid id);
     }
 }

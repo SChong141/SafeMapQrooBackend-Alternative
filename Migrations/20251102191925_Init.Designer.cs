@@ -11,7 +11,7 @@ using SafeMapQROOBackend.Data;
 namespace SafeMapQROOBackend.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20251102171510_Init")]
+    [Migration("20251102191925_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -226,6 +226,28 @@ namespace SafeMapQROOBackend.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("SafeMapQROOBackend.Models.Occupancy", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("CurrentOccupancy")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid?>("ShelterId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ShelterId");
+
+                    b.ToTable("Occupancy");
+                });
+
             modelBuilder.Entity("SafeMapQROOBackend.Models.Shelter", b =>
                 {
                     b.Property<Guid>("Id")
@@ -356,6 +378,20 @@ namespace SafeMapQROOBackend.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("SafeMapQROOBackend.Models.Occupancy", b =>
+                {
+                    b.HasOne("SafeMapQROOBackend.Models.Shelter", "Shelter")
+                        .WithMany("Occupancy")
+                        .HasForeignKey("ShelterId");
+
+                    b.Navigation("Shelter");
+                });
+
+            modelBuilder.Entity("SafeMapQROOBackend.Models.Shelter", b =>
+                {
+                    b.Navigation("Occupancy");
                 });
 #pragma warning restore 612, 618
         }

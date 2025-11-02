@@ -23,6 +23,7 @@ namespace SafeMapQROOBackend.Models
         public bool Available { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public bool Deleted { get; set; } = false;
+        public List<Occupancy> Occupancy { get; set; } = new List<Occupancy>();
     }
 
     public enum Municipalities
