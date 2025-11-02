@@ -25,40 +25,21 @@ namespace SafeMapQROOBackend.Repository
             return shelterModel;
         }
 
-        public async Task<Shelter?> DeleteAsync(Guid id)
-        {
-            var shelterModel = await _context.Shelter.FirstOrDefaultAsync(x => x.Id == id);
-
-            if (shelterModel == null)
-            {
-                return null;
-            }
-
-            _context.Shelter.Remove(shelterModel);
-            await _context.SaveChangesAsync();
-            return shelterModel;
-        }
-
         public async Task<List<Shelter>> GetAllAsync()
         {
-            return await _context.Shelter.Include(c => c.Occupancy).ToListAsync();
+            return await _context.Shelter.Include(c => c.Occupancy).Where(v => v.Deleted == false).ToListAsync();
         }
 
         public async Task<Shelter?> GetByIdAsync(Guid id)
         {
-            return await _context.Shelter.Include(c => c.Occupancy).FirstOrDefaultAsync(i => i.Id == id);
-        }
-
-        public async Task<Shelter?> ShelterExist(Guid id)
-        {
-            return await _context.Shelter.FirstOrDefaultAsync(s => s.Id == id);
+            return await _context.Shelter.Include(c => c.Occupancy).Where(v => v.Deleted == false).FirstOrDefaultAsync(i => i.Id == id);
         }
 
         public async Task<Shelter?> UpdateAsync(Guid id, UpdateShelterRequestDTO shelterDTO)
         {
             var existingShelter = await _context.Shelter.FirstOrDefaultAsync(x => x.Id == id);
 
-            if (existingShelter == null)
+            if (existingShelter == null || existingShelter.Deleted == true)
             {
                 return null;
             }
@@ -74,6 +55,28 @@ namespace SafeMapQROOBackend.Repository
             await _context.SaveChangesAsync();
 
             return existingShelter;
+        }
+
+        public async Task<Shelter?> DeleteAsync(Guid id)
+        {
+            var shelterModel = await _context.Shelter.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (shelterModel == null)
+            {
+                return null;
+            }
+
+            shelterModel.Deleted = true;
+
+            await _context.SaveChangesAsync();
+            
+            return shelterModel;
+        }
+
+
+        public async Task<Shelter?> ShelterExist(Guid id)
+        {
+            return await _context.Shelter.FirstOrDefaultAsync(s => s.Id == id);
         }
     }
 }
