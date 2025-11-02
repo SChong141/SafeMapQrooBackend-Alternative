@@ -10,9 +10,9 @@ namespace SafeMapQROOBackend.Interfaces
     public interface IShelterRepository
     {
         Task<List<Shelter>> GetAllAsync();
-        Task<Shelter?> GetByIdAsync(int id);
+        Task<Shelter?> GetByIdAsync(Guid id);
         Task<Shelter> CreateAsync(Shelter shelterModel);
-        Task<Shelter?> UpdateAsync(int id, UpdateShelterRequestDTO shelterDTO);
-        Task<Shelter?> DeleteAsync(int id);
+        Task<Shelter?> UpdateAsync(Guid id, UpdateShelterRequestDTO shelterDTO);
+        Task<Shelter?> DeleteAsync(Guid id);
     }
 }

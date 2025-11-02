@@ -56,15 +56,15 @@ namespace SafeMapQROOBackend.Migrations
                 name: "Shelter",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Latitude = table.Column<double>(type: "REAL", nullable: false),
                     Longitude = table.Column<double>(type: "REAL", nullable: false),
                     Capacity = table.Column<int>(type: "INTEGER", nullable: false),
-                    Occupants = table.Column<int>(type: "INTEGER", nullable: false),
                     Address = table.Column<string>(type: "TEXT", nullable: false),
+                    Municipality = table.Column<int>(type: "INTEGER", nullable: false),
                     Available = table.Column<bool>(type: "INTEGER", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Deleted = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
@@ -189,12 +189,12 @@ namespace SafeMapQROOBackend.Migrations
 
             migrationBuilder.InsertData(
                 table: "Shelter",
-                columns: new[] { "Id", "Address", "Available", "Capacity", "Deleted", "Latitude", "Longitude", "Name", "Occupants" },
+                columns: new[] { "Id", "Address", "Available", "Capacity", "CreatedAt", "Deleted", "Latitude", "Longitude", "Municipality", "Name" },
                 values: new object[,]
                 {
-                    { 1, "Dirección de prueba", true, 100, false, -52.457299999999996, 17.927399999999999, "Abergue 1", 0 },
-                    { 2, "Otra dirección de prueba", true, 200, false, 19.413, -20.590800000000002, "Abergue 2", 0 },
-                    { 3, "Otra otra irección de prueba", true, 300, false, -63.502299999999998, 79.467799999999997, "Abergue 3", 0 }
+                    { new Guid("019a458b-cf46-73ec-9dfc-7128d83ad0d9"), "Dirección de prueba", true, 100, new DateTime(2025, 11, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), false, -52.457299999999996, 17.927399999999999, 1, "Abergue 1" },
+                    { new Guid("019a458d-21a4-738b-b3dd-ed782a432da7"), "Otra dirección de prueba", true, 200, new DateTime(2025, 11, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), false, 19.413, -20.590800000000002, 1, "Abergue 2" },
+                    { new Guid("019a458d-51e2-799a-9e57-96718c3e7d1f"), "Otra otra dirección de prueba", true, 300, new DateTime(2025, 11, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), false, -63.502299999999998, 79.467799999999997, 1, "Abergue 3" }
                 });
 
             migrationBuilder.CreateIndex(

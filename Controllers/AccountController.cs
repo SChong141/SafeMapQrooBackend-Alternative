@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -58,8 +59,9 @@ namespace SafeMapQROOBackend.Controllers
             );
         }
 
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterDTO registerDTO)
+        [HttpPost("registerAdmin")]
+        // [Authorize(Roles = "Admin,Organizer")]
+        public async Task<IActionResult> RegisterAdmin([FromBody] RegisterAdminDTO registerAdminDTO)
         {
             try
             {
@@ -70,15 +72,65 @@ namespace SafeMapQROOBackend.Controllers
 
                 var appUser = new AppUser
                 {
-                    UserName = registerDTO.Username,
-                    Email = registerDTO.Email
+                    UserName = registerAdminDTO.Username,
+                    Email = registerAdminDTO.Email
                 };
 
-                var updateUser = await _userManager.CreateAsync(appUser, registerDTO.Password);
+                var updateUser = await _userManager.CreateAsync(appUser, registerAdminDTO.Password);
 
                 if (updateUser.Succeeded)
                 {
-                    var roleResult = await _userManager.AddToRoleAsync(appUser, Convert.ToString(registerDTO.Role));
+                    var roleResult = await _userManager.AddToRoleAsync(appUser, "Admin");
+
+                    if (roleResult.Succeeded)
+                    {
+                        return Ok(
+                            new NewLoginDTO
+                            {
+                                Id = appUser.Id,
+                                UserName = appUser.UserName,
+                                Email = appUser.Email,
+                                Token = await _tokenService.CreateToken(appUser)
+                            }
+                        );
+                    }
+                    else
+                    {
+                        return StatusCode(500, roleResult.Errors);
+                    }
+                }
+                else
+                {
+                    return StatusCode(500, updateUser.Errors);
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e);
+            }
+        }
+
+        [HttpPost("registerOrganizer")]
+        public async Task<IActionResult> RegisterOrganizer([FromBody] RegisterOrganizerDTO registerOrganizerDTO)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var appUser = new AppUser
+                {
+                    UserName = registerOrganizerDTO.Username,
+                    Email = registerOrganizerDTO.Email
+                };
+
+                var updateUser = await _userManager.CreateAsync(appUser, registerOrganizerDTO.Password);
+
+                if (updateUser.Succeeded)
+                {
+                    var roleResult = await _userManager.AddToRoleAsync(appUser, "Organizer");
 
                     if (roleResult.Succeeded)
                     {
@@ -109,6 +161,7 @@ namespace SafeMapQROOBackend.Controllers
         }
 
         [HttpPut]
+        [Authorize]
         public async Task<IActionResult> Update([FromBody] UpdateDTO updateDTO)
         {
             try

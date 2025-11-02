@@ -11,7 +11,7 @@ using SafeMapQROOBackend.Data;
 namespace SafeMapQROOBackend.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20251101012712_Init")]
+    [Migration("20251102171510_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -228,9 +228,9 @@ namespace SafeMapQROOBackend.Migrations
 
             modelBuilder.Entity("SafeMapQROOBackend.Models.Shelter", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -242,6 +242,9 @@ namespace SafeMapQROOBackend.Migrations
                     b.Property<int>("Capacity")
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("Deleted")
                         .HasColumnType("INTEGER");
 
@@ -251,12 +254,12 @@ namespace SafeMapQROOBackend.Migrations
                     b.Property<double>("Longitude")
                         .HasColumnType("REAL");
 
+                    b.Property<int>("Municipality")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("Occupants")
-                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -265,39 +268,42 @@ namespace SafeMapQROOBackend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("019a458b-cf46-73ec-9dfc-7128d83ad0d9"),
                             Address = "Dirección de prueba",
                             Available = true,
                             Capacity = 100,
+                            CreatedAt = new DateTime(2025, 11, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Deleted = false,
                             Latitude = -52.457299999999996,
                             Longitude = 17.927399999999999,
-                            Name = "Abergue 1",
-                            Occupants = 0
+                            Municipality = 1,
+                            Name = "Abergue 1"
                         },
                         new
                         {
-                            Id = 2,
+                            Id = new Guid("019a458d-21a4-738b-b3dd-ed782a432da7"),
                             Address = "Otra dirección de prueba",
                             Available = true,
                             Capacity = 200,
+                            CreatedAt = new DateTime(2025, 11, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Deleted = false,
                             Latitude = 19.413,
                             Longitude = -20.590800000000002,
-                            Name = "Abergue 2",
-                            Occupants = 0
+                            Municipality = 1,
+                            Name = "Abergue 2"
                         },
                         new
                         {
-                            Id = 3,
-                            Address = "Otra otra irección de prueba",
+                            Id = new Guid("019a458d-51e2-799a-9e57-96718c3e7d1f"),
+                            Address = "Otra otra dirección de prueba",
                             Available = true,
                             Capacity = 300,
+                            CreatedAt = new DateTime(2025, 11, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Deleted = false,
                             Latitude = -63.502299999999998,
                             Longitude = 79.467799999999997,
-                            Name = "Abergue 3",
-                            Occupants = 0
+                            Municipality = 1,
+                            Name = "Abergue 3"
                         });
                 });
 

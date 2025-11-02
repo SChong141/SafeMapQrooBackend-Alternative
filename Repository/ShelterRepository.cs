@@ -25,7 +25,7 @@ namespace SafeMapQROOBackend.Repository
             return shelterModel;
         }
 
-        public async Task<Shelter?> DeleteAsync(int id)
+        public async Task<Shelter?> DeleteAsync(Guid id)
         {
             var shelterModel = await _context.Shelter.FirstOrDefaultAsync(x => x.Id == id);
 
@@ -44,12 +44,12 @@ namespace SafeMapQROOBackend.Repository
             return await _context.Shelter.ToListAsync();
         }
 
-        public async Task<Shelter?> GetByIdAsync(int id)
+        public async Task<Shelter?> GetByIdAsync(Guid id)
         {
             return await _context.Shelter.FindAsync(id);
         }
 
-        public async Task<Shelter?> UpdateAsync(int id, UpdateShelterRequestDTO shelterDTO)
+        public async Task<Shelter?> UpdateAsync(Guid id, UpdateShelterRequestDTO shelterDTO)
         {
             var existingShelter = await _context.Shelter.FirstOrDefaultAsync(x => x.Id == id);
 
@@ -62,8 +62,8 @@ namespace SafeMapQROOBackend.Repository
             existingShelter.Latitude = shelterDTO.Latidude;
             existingShelter.Longitude = shelterDTO.Longitude;
             existingShelter.Capacity = shelterDTO.Capacity;
-            existingShelter.Occupants = shelterDTO.Occupants;
             existingShelter.Address = shelterDTO.Address;
+            existingShelter.Municipality = shelterDTO.Municipality;
             existingShelter.Available = shelterDTO.Available;
 
             await _context.SaveChangesAsync();

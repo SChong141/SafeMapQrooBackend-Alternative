@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -45,38 +46,41 @@ namespace SafeMapQROOBackend.Data
             {
                 new Shelter
                 {
-                    Id = 1,
+                    Id = Guid.Parse("019a458b-cf46-73ec-9dfc-7128d83ad0d9"),
                     Name = "Abergue 1",
                     Latitude = -52.4573,
                     Longitude = 17.9274,
                     Capacity = 100,
-                    Occupants = 0,
                     Address = "Dirección de prueba",
+                    Municipality = (Municipalities)1,
                     Available = true,
+                    CreatedAt = new DateTime(2025, 11, 2),
                     Deleted = false,
                 },
                 new Shelter
                 {
-                    Id = 2,
+                    Id = Guid.Parse("019a458d-21a4-738b-b3dd-ed782a432da7"),
                     Name = "Abergue 2",
                     Latitude = 19.4130,
                     Longitude = -20.5908,
                     Capacity = 200,
-                    Occupants = 0,
                     Address = "Otra dirección de prueba",
+                    Municipality = (Municipalities)1,
                     Available = true,
+                    CreatedAt = new DateTime(2025, 11, 2),
                     Deleted = false,
                 },
                 new Shelter
                 {
-                    Id = 3,
+                    Id = Guid.Parse("019a458d-51e2-799a-9e57-96718c3e7d1f"),
                     Name = "Abergue 3",
                     Latitude = -63.5023,
                     Longitude = 79.4678,
                     Capacity = 300,
-                    Occupants = 0,
-                    Address = "Otra otra irección de prueba",
+                    Address = "Otra otra dirección de prueba",
+                    Municipality = (Municipalities)1,
                     Available = true,
+                    CreatedAt = new DateTime(2025, 11, 2),
                     Deleted = false,
                 }
             };

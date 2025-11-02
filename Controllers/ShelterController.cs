@@ -36,7 +36,7 @@ namespace SafeMapQROOBackend.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById([FromRoute] int id)
+        public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
             var shelters = await _shelterRepo.GetByIdAsync(id);
 
@@ -49,6 +49,7 @@ namespace SafeMapQROOBackend.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromBody] CreateShelterRequestDTO shelterDTO)
         {
             var shelterModel = shelterDTO.ToShelterFromCreateDTO();
@@ -60,7 +61,8 @@ namespace SafeMapQROOBackend.Controllers
 
         [HttpPut]
         [Route("{id}")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateShelterRequestDTO updateDTO)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateShelterRequestDTO updateDTO)
         {
             var shelterModel = await _shelterRepo.UpdateAsync(id, updateDTO);
 
@@ -74,7 +76,8 @@ namespace SafeMapQROOBackend.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        public async Task<IActionResult> Delete([FromRoute] int id)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             var shelterModel = await _shelterRepo.DeleteAsync(id);
 
