@@ -12,18 +12,20 @@ using SafeMapQROOBackend.Models;
 
 namespace SafeMapQROOBackend.Controllers
 {
-    [Route("api/account")]
+    [Route("api/authorize")]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class AuthorizeController : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly ITokenService _tokenService;
+        private readonly IAuthorizeRepository _register;
         private readonly SignInManager<AppUser> _signInManager;
-        public AccountController(UserManager<AppUser> userManager, ITokenService tokenService, SignInManager<AppUser> signInManager)
+        public AuthorizeController(UserManager<AppUser> userManager, ITokenService tokenService, SignInManager<AppUser> signInManager, IAuthorizeRepository register)
         {
             _userManager = userManager;
             _tokenService = tokenService;
             _signInManager = signInManager;
+            _register = register;
         }
 
         [HttpPost("login")]
@@ -51,7 +53,6 @@ namespace SafeMapQROOBackend.Controllers
             return Ok(
                 new NewLoginDTO
                 {
-                    Id = user.Id,
                     UserName = user.UserName,
                     Email = user.Email,
                     Token = await _tokenService.CreateToken(user)
@@ -60,7 +61,7 @@ namespace SafeMapQROOBackend.Controllers
         }
 
         [HttpPost("registerAdmin")]
-        // [Authorize(Roles = "Admin,Organizer")]
+        // [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RegisterAdmin([FromBody] RegisterAdminDTO registerAdminDTO)
         {
             try
@@ -72,37 +73,25 @@ namespace SafeMapQROOBackend.Controllers
 
                 var appUser = new AppUser
                 {
-                    UserName = registerAdminDTO.Username,
+                    UserName = registerAdminDTO.UserName,
                     Email = registerAdminDTO.Email
                 };
 
-                var updateUser = await _userManager.CreateAsync(appUser, registerAdminDTO.Password);
+                var ExistUser = await _userManager.FindByEmailAsync(registerAdminDTO.Email);
 
-                if (updateUser.Succeeded)
+                if (ExistUser != null)
                 {
-                    var roleResult = await _userManager.AddToRoleAsync(appUser, "Admin");
+                    return BadRequest("Email Exist");
+                }
 
-                    if (roleResult.Succeeded)
-                    {
-                        return Ok(
-                            new NewLoginDTO
-                            {
-                                Id = appUser.Id,
-                                UserName = appUser.UserName,
-                                Email = appUser.Email,
-                                Token = await _tokenService.CreateToken(appUser)
-                            }
-                        );
-                    }
-                    else
-                    {
-                        return StatusCode(500, roleResult.Errors);
-                    }
-                }
-                else
+                var registerUser = await _register.RegisterNewUserAsync(appUser, "Admin", registerAdminDTO.Password);
+
+                if (registerUser == null)
                 {
-                    return StatusCode(500, updateUser.Errors);
+                    return BadRequest(registerUser);
                 }
+
+                return Ok(registerUser);
             }
             catch (Exception e)
             {
@@ -111,6 +100,7 @@ namespace SafeMapQROOBackend.Controllers
         }
 
         [HttpPost("registerOrganizer")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RegisterOrganizer([FromBody] RegisterOrganizerDTO registerOrganizerDTO)
         {
             try
@@ -120,41 +110,29 @@ namespace SafeMapQROOBackend.Controllers
                     return BadRequest(ModelState);
                 }
 
+                var ExistUser = await _userManager.FindByEmailAsync(registerOrganizerDTO.Email);
+
+                if (ExistUser != null)
+                {
+                    return BadRequest("Email Exist");
+                }
+
                 var appUser = new AppUser
                 {
-                    UserName = registerOrganizerDTO.Username,
+                    UserName = registerOrganizerDTO.UserName,
                     Email = registerOrganizerDTO.Email,
                     PhoneNumber = registerOrganizerDTO.PhoneNumber,
                     AssignedShelter = registerOrganizerDTO.AssignedShelter
                 };
 
-                var updateUser = await _userManager.CreateAsync(appUser, registerOrganizerDTO.Password);
+                var registerUser = await _register.RegisterNewUserAsync(appUser, "Organizer", registerOrganizerDTO.Password);
 
-                if (updateUser.Succeeded)
+                if (registerUser == null)
                 {
-                    var roleResult = await _userManager.AddToRoleAsync(appUser, "Organizer");
-
-                    if (roleResult.Succeeded)
-                    {
-                        return Ok(
-                            new NewLoginDTO
-                            {
-                                Id = appUser.Id,
-                                UserName = appUser.UserName,
-                                Email = appUser.Email,
-                                Token = await _tokenService.CreateToken(appUser)
-                            }
-                        );
-                    }
-                    else
-                    {
-                        return StatusCode(500, roleResult.Errors);
-                    }
+                    return BadRequest(registerUser);
                 }
-                else
-                {
-                    return StatusCode(500, updateUser.Errors);
-                }
+                
+                return Ok(registerUser);
             }
             catch (Exception e)
             {
@@ -164,7 +142,7 @@ namespace SafeMapQROOBackend.Controllers
 
         [HttpPut]
         [Authorize]
-        public async Task<IActionResult> Update([FromBody] UpdateDTO updateDTO)
+        public async Task<IActionResult> Update([FromBody] UpdateUserDTO updateDTO)
         {
             try
             {
@@ -182,13 +160,13 @@ namespace SafeMapQROOBackend.Controllers
 
                 user.UserName = updateDTO.UserName;
                 user.Email = updateDTO.Email;
-                
+
                 var updatedUser = await _userManager.UpdateAsync(user);
 
                 if (updatedUser.Succeeded)
                 {
                     return Ok(
-                        new UpdateDTO
+                        new UpdateUserDTO
                         {
                             Id = user.Id,
                             UserName = user.UserName,
@@ -206,5 +184,23 @@ namespace SafeMapQROOBackend.Controllers
                 return StatusCode(500, e);
             }
         }
+        
+        /*[HttpGet("{Token}")]
+        public async Task<IActionResult> GetRol([FromRoute] string Token)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var rol = _register.GetRolAsync(Token);
+            
+            if (rol == null)
+            {
+                return BadRequest("No exist rol");
+            }
+
+            return Ok(rol);
+        }*/
     }
 }

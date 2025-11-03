@@ -9,7 +9,7 @@ namespace SafeMapQROOBackend.Dtos.Account
     public class RegisterOrganizerDTO
     {
         [Required]
-        public string? Username { get; set; }
+        public string? UserName { get; set; }
         [Required]
         [EmailAddress]
         public string? Email { get; set; }

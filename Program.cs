@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using SafeMapQROOBackend.Data;
 using SafeMapQROOBackend.Interfaces;
 using SafeMapQROOBackend.Models;
 using SafeMapQROOBackend.Repository;
 using SafeMapQROOBackend.Service;
+using SafeMapQROOBackend.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -95,6 +95,7 @@ builder.Services.AddAuthentication(options =>
 // Dependency Injection for repositories and services
 builder.Services.AddScoped<IShelterRepository, ShelterRepository>();
 builder.Services.AddScoped<IOccupancyRepository, OccupancyRepository>();
+builder.Services.AddScoped<IAuthorizeRepository, AuthorizeRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 
 var app = builder.Build();

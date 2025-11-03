@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SafeMapQROOBackend.Dtos.Account
 {
-    public class UpdateDTO
+    public class UpdateUserDTO
     {
         [Required]
         public string? Id { get; set; }
