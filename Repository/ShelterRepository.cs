@@ -2,9 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SafeMapQROOBackend.Data;
+using SafeMapQROOBackend.Dtos.Occupancy;
 using SafeMapQROOBackend.Dtos.Shelter;
+using SafeMapQROOBackend.Dtos.User;
 using SafeMapQROOBackend.Interfaces;
 using SafeMapQROOBackend.Models;
 
@@ -13,9 +16,12 @@ namespace SafeMapQROOBackend.Repository
     public class ShelterRepository : IShelterRepository
     {
         private readonly ApplicationDBContext _context;
-        public ShelterRepository(ApplicationDBContext context)
+        private readonly UserManager<AppUser> _userManager;
+
+        public ShelterRepository(ApplicationDBContext context, UserManager<AppUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         public async Task<Shelter> CreateAsync(Shelter shelterModel)
@@ -27,12 +33,48 @@ namespace SafeMapQROOBackend.Repository
 
         public async Task<List<Shelter>> GetAllAsync()
         {
-            return await _context.Shelter.Include(c => c.Occupancy).Where(v => v.Deleted == false).ToListAsync();
+            return await _context.Shelter
+                .Include(c => c.Occupancy)
+                .Where(v => v.Deleted == false)
+                .ToListAsync();
         }
 
-        public async Task<Shelter?> GetByIdAsync(Guid id)
+        public async Task<ShelterDTO?> GetByIdAsync(Guid id)
         {
-            return await _context.Shelter.Include(c => c.Occupancy).Where(v => v.Deleted == false).FirstOrDefaultAsync(i => i.Id == id);
+            var shelter = await _context.Shelter
+                .Include(c => c.Occupancy)
+                .Where(v => v.Deleted == false)
+                .FirstOrDefaultAsync(i => i.Id == id);
+
+            var organizer = await _userManager.Users.FirstOrDefaultAsync(u => u.AssignedShelter == shelter.Id);
+
+            var response = new ShelterDTO
+            {
+                Id = shelter.Id,
+                Name = shelter.Name,
+                Latitude = shelter.Latitude,
+                Longitude = shelter.Longitude,
+                Capacity = shelter.Capacity,
+                Address = shelter.Address,
+                Municipality = shelter.Municipality,
+                Available = shelter.Available,
+                CreatedAt = shelter.CreatedAt,
+                Occupancy = shelter.Occupancy.Select(o => new OccupancyDTO
+                {
+                    Id = o.Id,
+                    CurrentOccupancy = o.CurrentOccupancy,
+                    UpdatedOn = o.UpdatedOn,
+                    ShelterId = o.ShelterId
+                }).ToList(),
+                Organizer = new UserDTO
+                {
+                    UserName = organizer.UserName,
+                    PhoneNumber = organizer.PhoneNumber,
+                    Email = organizer.Email
+                }
+            };
+
+            return response;
         }
 
         public async Task<Shelter?> UpdateAsync(Guid id, UpdateShelterRequestDTO shelterDTO)

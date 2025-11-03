@@ -123,7 +123,9 @@ namespace SafeMapQROOBackend.Controllers
                 var appUser = new AppUser
                 {
                     UserName = registerOrganizerDTO.Username,
-                    Email = registerOrganizerDTO.Email
+                    Email = registerOrganizerDTO.Email,
+                    PhoneNumber = registerOrganizerDTO.PhoneNumber,
+                    AssignedShelter = registerOrganizerDTO.AssignedShelter
                 };
 
                 var updateUser = await _userManager.CreateAsync(appUser, registerOrganizerDTO.Password);

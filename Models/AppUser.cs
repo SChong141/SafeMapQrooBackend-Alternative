@@ -8,6 +8,6 @@ namespace SafeMapQROOBackend.Models
 {
     public class AppUser : IdentityUser
     {
-
+        public Guid AssignedShelter { get; set; }
     }
 }

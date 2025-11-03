@@ -11,7 +11,7 @@ using SafeMapQROOBackend.Data;
 namespace SafeMapQROOBackend.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20251102191925_Init")]
+    [Migration("20251103031616_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -169,6 +169,9 @@ namespace SafeMapQROOBackend.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("AssignedShelter")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()

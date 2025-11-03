@@ -38,14 +38,15 @@ namespace SafeMapQROOBackend.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
-            var shelters = await _shelterRepo.GetByIdAsync(id);
+            var shelter = await _shelterRepo.GetByIdAsync(id);
 
-            if (shelters == null)
+            if (shelter == null)
             {
                 return NotFound();
             }
 
-            return Ok(shelters.ToShelterDTO());
+            // return Ok(shelters.ToShelterDTO());
+            return Ok(shelter);
         }
 
         [HttpPost]
