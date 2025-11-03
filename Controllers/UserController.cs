@@ -50,9 +50,9 @@ namespace SafeMapQROO.Controllers
         public async Task<IActionResult> UpdateUser([FromRoute] string Id, [FromBody] UpdateUserDto User)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var userModel = _userRepo.UpdateUserAcync(Id, User.ToUserFromUpdate());
+            var userModel = await _userRepo.UpdateUserAcync(Id, User.ToUserFromUpdate());
             if (userModel == null) return BadRequest("User not found");
-            return Ok(userModel.Result.ToRetunUserDto());
+            return Ok(userModel.ToRetunUserDto());
         }
 
         [HttpDelete]

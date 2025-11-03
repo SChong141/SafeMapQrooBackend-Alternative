@@ -7,10 +7,16 @@ using System.Threading.Tasks;
 namespace SafeMapQROO.Dtos.Account
 {
     public class UpdateUserDto
+
     {
         [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+        [Required]
+        [RegularExpression(@"^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]")]
         public string? Names { get; set; }
         [Required]
+        [RegularExpression(@"^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]")]
         public string? Lastname { get; set; }
         public string UserName
         {

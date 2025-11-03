@@ -10,6 +10,7 @@ using SafeMapQROO.Repository;
 using SafeMapQROO.Service;
 using SafeMapQROOBackend.Data;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
@@ -71,7 +72,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<IRegisterRepository, RegisterRepository>();
+builder.Services.AddScoped<IAuthorizeRepository, AuthorizeRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 var app = builder.Build();

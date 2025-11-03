@@ -12,8 +12,10 @@ namespace SafeMapQROO.Dtos.Account
     public class RegisterUserDto
     {
         [Required]
+        [RegularExpression(@"^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]")]
         public string? Names { get; set; }
         [Required]
+        [RegularExpression(@"^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]")]
         public string? Lastname { get; set; }
         [Required]
         [EmailAddress]

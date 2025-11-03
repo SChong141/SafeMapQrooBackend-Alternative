@@ -48,6 +48,7 @@ namespace SafeMapQROO.Repository
             Exist.Names = user.Names;
             Exist.Lastname = user.Lastname;
             Exist.UserName = user.UserName;
+            Exist.Email = user.Email;
             await _userManager.UpdateAsync(Exist);
             return Exist;
         }

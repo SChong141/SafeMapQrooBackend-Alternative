@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SafeMapQROO.Dtos;
 using SafeMapQROO.Dtos.Account;
 using SafeMapQROO.Interface;
@@ -11,11 +14,11 @@ using SafeMapQROO.Models;
 
 namespace SafeMapQROO.Repository
 {
-    public class RegisterRepository : IRegisterRepository
+    public class AuthorizeRepository : IAuthorizeRepository
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly ITokenService _tokenService;
-        public RegisterRepository(UserManager<AppUser> userManager, ITokenService tokenService)
+        public AuthorizeRepository(UserManager<AppUser> userManager, ITokenService tokenService)
         {
             _userManager = userManager;
             _tokenService = tokenService;
@@ -56,6 +59,17 @@ namespace SafeMapQROO.Repository
             var Resultpass = await _userManager.AddPasswordAsync(ExistUser, newPassword);
             if (!Resultpass.Succeeded) return null;
             return ExistUser;
+        }
+
+        public List<string> GetRolAsync(string token)
+        {
+            var Hander = new JwtSecurityTokenHandler();
+
+            var jwtToken = Hander.ReadJwtToken(token);
+
+            return jwtToken.Claims.Where(c => c.Type == ClaimTypes.Role || c.Type == "role")
+            .Select(c => c.Value)
+            .ToList();
         }
     }
 }

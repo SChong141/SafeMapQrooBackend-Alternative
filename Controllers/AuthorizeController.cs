@@ -5,31 +5,31 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using SafeMapQROO.Dtos;
 using SafeMapQROO.Dtos.Account;
 using SafeMapQROO.Interface;
 using SafeMapQROO.Models;
 
+
 namespace SafeMapQROO.Controllers
 {
-    [Route("api/account")]
+    [Route("api/Authorize")]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class AuthorizeController : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly ITokenService _tokenService;
-        private readonly IRegisterRepository _register;
+        private readonly IAuthorizeRepository _register;
         private readonly SignInManager<AppUser> _signInManager;
-        public AccountController(UserManager<AppUser> userManager, ITokenService tokenService, SignInManager<AppUser> signInManager, IRegisterRepository register)
+        public AuthorizeController(UserManager<AppUser> userManager, ITokenService tokenService, SignInManager<AppUser> signInManager, IAuthorizeRepository register)
         {
             _userManager = userManager;
             _tokenService = tokenService;
             _signInManager = signInManager;
             _register = register;
-
         }
-
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
@@ -54,6 +54,18 @@ namespace SafeMapQROO.Controllers
             });
 
         }
+
+
+        [HttpGet("{Token}")]
+        public async Task<IActionResult> GetRol([FromRoute] string Token)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var rol = _register.GetRolAsync(Token);
+            if (rol == null) return BadRequest("No exist rol");
+            return Ok(rol);
+        }
+
+
 
         [HttpPost("registerCitizen")]
         public async Task<IActionResult> Register([FromBody] RegisterUserDto regiUserDto)
@@ -87,6 +99,7 @@ namespace SafeMapQROO.Controllers
             }
 
         }
+
         [HttpPost("registerAdmin")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RegisterAdmin([FromBody] RegisterUserDto userDto)
@@ -150,6 +163,7 @@ namespace SafeMapQROO.Controllers
 
             }
         }
+
         [HttpPut("NewPassword{Email}")]
         [Authorize(Roles = "Admin,Employee,User")]
         public async Task<IActionResult> UpdatePassword([FromRoute] string Email, [FromBody] NewPasswordDto newPassword)
@@ -159,5 +173,7 @@ namespace SafeMapQROO.Controllers
             if (Resultpass == null) return BadRequest("Error");
             return NoContent();
         }
+
+
     }
 }

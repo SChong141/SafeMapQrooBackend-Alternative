@@ -21,13 +21,16 @@ namespace SafeMapQROO.Mappers
 
         }
 
-        public static UserDto ToRetunUserDto(this AppUser appUser)
+        public static ReturnUserDto ToRetunUserDto(this AppUser appUser)
         {
-            return new UserDto
+            return new ReturnUserDto
             {
+
+                Email = appUser.Email,
                 UserName = appUser.UserName,
                 Names = appUser.Names,
                 Lastname = appUser.Lastname,
+
             };
 
 
@@ -36,6 +39,7 @@ namespace SafeMapQROO.Mappers
         {
             return new AppUser
             {
+                Email = userDto.Email,
                 Names = userDto.Names,
                 Lastname = userDto.Lastname,
                 UserName = userDto.UserName,

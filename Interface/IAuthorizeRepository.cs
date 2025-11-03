@@ -6,11 +6,13 @@ using SafeMapQROO.Dtos;
 using SafeMapQROO.Dtos.Account;
 using SafeMapQROO.Models;
 
+
 namespace SafeMapQROO.Interface
 {
-    public interface IRegisterRepository
+    public interface IAuthorizeRepository
     {
         Task<InfoUserDto?> RegisterNewUserAsyn(AppUser registerNew, string role, string password);
         Task<AppUser?> NewPasswordAsync(string Email, string password);
+        List<string> GetRolAsync(string token);
     }
 }

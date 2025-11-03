@@ -7,6 +7,8 @@ namespace SafeMapQROO.Dtos.Account
 {
     public class ReturnUserDto
     {
+        public string Email { get; set; }
+
         public string UserName { get; set; }
         public string? Names { get; set; }
         public string? Lastname { get; set; }
