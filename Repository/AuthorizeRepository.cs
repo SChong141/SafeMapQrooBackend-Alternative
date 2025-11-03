@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using SafeMapQROO.Dtos;
-using SafeMapQROO.Dtos.Account;
-using SafeMapQROO.Interface;
-using SafeMapQROO.Models;
+using SafeMapQROOBackend.Dtos.Account;
+using SafeMapQROOBackend.Interfaces;
+using SafeMapQROOBackend.Models;
 
-namespace SafeMapQROO.Repository
+namespace SafeMapQROOBackend.Repository
 {
     public class AuthorizeRepository : IAuthorizeRepository
     {
@@ -24,7 +23,7 @@ namespace SafeMapQROO.Repository
             _tokenService = tokenService;
         }
 
-        public async Task<InfoUserDto?> RegisterNewUserAsyn(AppUser registerNew, string role, string password)
+        public async Task<NewLoginDTO?> RegisterNewUserAsyn(AppUser registerNew, string role, string password)
         {
             var createUser = await _userManager.CreateAsync(registerNew, password);
             if (createUser.Succeeded)
@@ -32,7 +31,7 @@ namespace SafeMapQROO.Repository
                 var roleResult = await _userManager.AddToRoleAsync(registerNew, role);
                 if (roleResult.Succeeded)
                 {
-                    return new InfoUserDto
+                    return new NewLoginDTO
                     {
                         UserName = registerNew.UserName,
                         Email = registerNew.Email,
@@ -53,15 +52,30 @@ namespace SafeMapQROO.Repository
         public async Task<AppUser?> NewPasswordAsync(string Email, string newPassword)
         {
             var ExistUser = await _userManager.FindByEmailAsync(Email);
-            if (ExistUser == null) return null;
+
+            if (ExistUser == null)
+            {
+                return null;
+            }
+
             var removeResult = await _userManager.RemovePasswordAsync(ExistUser);
-            if (!removeResult.Succeeded) return null;
+
+            if (!removeResult.Succeeded)
+            {
+                return null;
+            }
+
             var Resultpass = await _userManager.AddPasswordAsync(ExistUser, newPassword);
-            if (!Resultpass.Succeeded) return null;
+
+            if (!Resultpass.Succeeded)
+            {
+                return null;
+            }
+            
             return ExistUser;
         }
 
-        public List<string> GetRolAsync(string token)
+        /*public List<string> GetRolAsync(string token)
         {
             var Hander = new JwtSecurityTokenHandler();
 
@@ -70,6 +84,6 @@ namespace SafeMapQROO.Repository
             return jwtToken.Claims.Where(c => c.Type == ClaimTypes.Role || c.Type == "role")
             .Select(c => c.Value)
             .ToList();
-        }
+        }*/
     }
 }

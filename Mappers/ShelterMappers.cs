@@ -19,9 +19,11 @@ namespace SafeMapQROOBackend.Mappers
                 Latitude = shelterModel.Latitude,
                 Longitude = shelterModel.Longitude,
                 Capacity = shelterModel.Capacity,
-                Occupants = shelterModel.Occupants,
                 Address = shelterModel.Address,
+                Municipality = shelterModel.Municipality,
                 Available = shelterModel.Available,
+                CreatedAt = shelterModel.CreatedAt,
+                Occupancy = shelterModel.Occupancy.Select(c => c.ToOccupancyDTO()).ToList()
             };
         }
 
@@ -34,6 +36,7 @@ namespace SafeMapQROOBackend.Mappers
                 Longitude = shelterDTO.Longitude,
                 Capacity = shelterDTO.Capacity,
                 Address = shelterDTO.Address,
+                Municipality = shelterDTO.Municipality,
                 Available = shelterDTO.Available
             };
         }

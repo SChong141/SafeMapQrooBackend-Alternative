@@ -4,14 +4,13 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SafeMapQROO.Dtos.Account
+namespace SafeMapQROOBackend.Dtos.Account
 {
-    public class LoginDto
+    public class LoginDTO
     {
         [Required]
-        [RegularExpression(@"^[A-Za-zÁÉÍÓÚáéíóúÑñ]")]
-        public string? Username { get; set; }
+        public string Email { get; set; }
         [Required]
-        public string? Password { get; set; }
+        public string Password { get; set; }        
     }
 }

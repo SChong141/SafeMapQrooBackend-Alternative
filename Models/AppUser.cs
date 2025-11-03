@@ -4,12 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 
-namespace SafeMapQROO.Models
+namespace SafeMapQROOBackend.Models
 {
     public class AppUser : IdentityUser
     {
-
-        public string Names { get; set; }
-        public string Lastname { get; set; }
+        public Guid AssignedShelter { get; set; }
     }
 }

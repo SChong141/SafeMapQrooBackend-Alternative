@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SafeMapQROOBackend.Data;
 using SafeMapQROOBackend.Dtos.Shelter;
+using SafeMapQROOBackend.Interfaces;
 using SafeMapQROOBackend.Mappers;
 using SafeMapQROOBackend.Models;
 
@@ -17,32 +18,35 @@ namespace SafeMapQROOBackend.Controllers
     public class ShelterController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
-        public ShelterController(ApplicationDBContext context)
+        private readonly IShelterRepository _shelterRepo;
+        public ShelterController(ApplicationDBContext context, IShelterRepository shelterRepo)
         {
+            _shelterRepo = shelterRepo;
             _context = context;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var shelters = await _context.Shelter.ToListAsync();
+            var shelters = await _shelterRepo.GetAllAsync();
 
             var shelterDTO = shelters.Select(s => s.ToShelterDTO());
 
-            return Ok(shelters);
+            return Ok(shelterDTO);
         }
-        [HttpGet("{id}")]
-        [Authorize(Roles = "Admin,Employee,User")]
-        public async Task<IActionResult> GetById([FromRoute] int id)
-        {
-            var shelters = await _context.Shelter.FindAsync(id);
 
-            if (shelters == null)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById([FromRoute] Guid id)
+        {
+            var shelter = await _shelterRepo.GetByIdAsync(id);
+
+            if (shelter == null)
             {
                 return NotFound();
             }
 
-            return Ok(shelters.ToShelterDTO());
+            // return Ok(shelters.ToShelterDTO());
+            return Ok(shelter);
         }
 
         [HttpPost]
@@ -50,32 +54,23 @@ namespace SafeMapQROOBackend.Controllers
         public async Task<IActionResult> Create([FromBody] CreateShelterRequestDTO shelterDTO)
         {
             var shelterModel = shelterDTO.ToShelterFromCreateDTO();
-            await _context.Shelter.AddAsync(shelterModel);
-            await _context.SaveChangesAsync();
+
+            await _shelterRepo.CreateAsync(shelterModel);
+
             return CreatedAtAction(nameof(GetById), new { id = shelterModel.Id }, shelterModel.ToShelterDTO());
         }
 
         [HttpPut]
         [Route("{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateShelterRequestDTO updateDTO)
+        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateShelterRequestDTO updateDTO)
         {
-            var shelterModel = await _context.Shelter.FirstOrDefaultAsync(x => x.Id == id);
+            var shelterModel = await _shelterRepo.UpdateAsync(id, updateDTO);
 
             if (shelterModel == null)
             {
                 return NotFound();
             }
-
-            shelterModel.Name = updateDTO.Name;
-            shelterModel.Latitude = updateDTO.Latidude;
-            shelterModel.Longitude = updateDTO.Longitude;
-            shelterModel.Capacity = updateDTO.Capacity;
-            shelterModel.Occupants = updateDTO.Occupants;
-            shelterModel.Address = updateDTO.Address;
-            shelterModel.Available = updateDTO.Available;
-
-            await _context.SaveChangesAsync();
 
             return Ok(shelterModel.ToShelterDTO());
         }
@@ -83,18 +78,14 @@ namespace SafeMapQROOBackend.Controllers
         [HttpDelete]
         [Route("{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
-            var shelterModel = await _context.Shelter.FirstOrDefaultAsync(x => x.Id == id);
+            var shelterModel = await _shelterRepo.DeleteAsync(id);
 
             if (shelterModel == null)
             {
                 return NotFound();
             }
-
-            _context.Shelter.Remove(shelterModel);
-
-            await _context.SaveChangesAsync();
 
             return NoContent();
         }

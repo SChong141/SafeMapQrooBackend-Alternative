@@ -1,15 +1,15 @@
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using SafeMapQROO.Interface;
-using SafeMapQROO.Models;
-using SafeMapQROO.Repository;
-using SafeMapQROO.Service;
 using SafeMapQROOBackend.Data;
-
+using SafeMapQROOBackend.Interfaces;
+using SafeMapQROOBackend.Models;
+using SafeMapQROOBackend.Repository;
+using SafeMapQROOBackend.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +17,19 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
 
+// Newtonsoft to handle json object cycles
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+{
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+});
+
+// Enum description converter for constrained fields
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
+
+// Swagger JWT
 builder.Services.AddSwaggerGen(option =>
 {
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
@@ -47,13 +60,16 @@ builder.Services.AddSwaggerGen(option =>
 
 // Configuiracion de Contexto de Base de Datos
 builder.Services.AddDbContext<ApplicationDBContext>(Options => Options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddIdentity<AppUser, IdentityRole>(option =>
+
+// Identity
+builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
-    option.Password.RequireDigit = true;
-    option.Password.RequireLowercase = true;
-    option.Password.RequireUppercase = true;
-    option.Password.RequireNonAlphanumeric = true;
-    option.Password.RequiredLength = 8;
+    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+áéíóúÁÉÍÓÚñÑ ";
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequiredLength = 8;
 }).AddEntityFrameworkStores<ApplicationDBContext>();
 builder.Services.AddAuthentication(options =>
 {
@@ -71,9 +87,11 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddScoped<ITokenService, TokenService>();
+// Dependency Injection for repositories and services
+builder.Services.AddScoped<IShelterRepository, ShelterRepository>();
+builder.Services.AddScoped<IOccupancyRepository, OccupancyRepository>();
 builder.Services.AddScoped<IAuthorizeRepository, AuthorizeRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 var app = builder.Build();
 

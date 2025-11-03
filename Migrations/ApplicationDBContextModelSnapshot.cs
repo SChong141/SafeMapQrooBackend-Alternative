@@ -52,14 +52,8 @@ namespace SafeMapQROOBackend.Migrations
                         new
                         {
                             Id = "2",
-                            Name = "Employee",
-                            NormalizedName = "EMPLOYEE"
-                        },
-                        new
-                        {
-                            Id = "3",
-                            Name = "User",
-                            NormalizedName = "USER"
+                            Name = "Organizer",
+                            NormalizedName = "ORGANIZER"
                         });
                 });
 
@@ -165,13 +159,16 @@ namespace SafeMapQROOBackend.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("SafeMapQROO.Models.AppUser", b =>
+            modelBuilder.Entity("SafeMapQROOBackend.Models.AppUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("AssignedShelter")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -184,18 +181,10 @@ namespace SafeMapQROOBackend.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Lastname")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Names")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("NormalizedEmail")
@@ -237,11 +226,33 @@ namespace SafeMapQROOBackend.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("SafeMapQROOBackend.Models.Occupancy", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("CurrentOccupancy")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid?>("ShelterId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ShelterId");
+
+                    b.ToTable("Occupancy");
+                });
+
             modelBuilder.Entity("SafeMapQROOBackend.Models.Shelter", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -253,6 +264,9 @@ namespace SafeMapQROOBackend.Migrations
                     b.Property<int>("Capacity")
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("Deleted")
                         .HasColumnType("INTEGER");
 
@@ -262,16 +276,57 @@ namespace SafeMapQROOBackend.Migrations
                     b.Property<double>("Longitude")
                         .HasColumnType("REAL");
 
+                    b.Property<int>("Municipality")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Occupants")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
                     b.ToTable("Shelter");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("019a458b-cf46-73ec-9dfc-7128d83ad0d9"),
+                            Address = "Dirección de prueba",
+                            Available = true,
+                            Capacity = 100,
+                            CreatedAt = new DateTime(2025, 11, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Deleted = false,
+                            Latitude = -52.457299999999996,
+                            Longitude = 17.927399999999999,
+                            Municipality = 1,
+                            Name = "Abergue 1"
+                        },
+                        new
+                        {
+                            Id = new Guid("019a458d-21a4-738b-b3dd-ed782a432da7"),
+                            Address = "Otra dirección de prueba",
+                            Available = true,
+                            Capacity = 200,
+                            CreatedAt = new DateTime(2025, 11, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Deleted = false,
+                            Latitude = 19.413,
+                            Longitude = -20.590800000000002,
+                            Municipality = 1,
+                            Name = "Abergue 2"
+                        },
+                        new
+                        {
+                            Id = new Guid("019a458d-51e2-799a-9e57-96718c3e7d1f"),
+                            Address = "Otra otra dirección de prueba",
+                            Available = true,
+                            Capacity = 300,
+                            CreatedAt = new DateTime(2025, 11, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Deleted = false,
+                            Latitude = -63.502299999999998,
+                            Longitude = 79.467799999999997,
+                            Municipality = 1,
+                            Name = "Abergue 3"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -285,7 +340,7 @@ namespace SafeMapQROOBackend.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("SafeMapQROO.Models.AppUser", null)
+                    b.HasOne("SafeMapQROOBackend.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -294,7 +349,7 @@ namespace SafeMapQROOBackend.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("SafeMapQROO.Models.AppUser", null)
+                    b.HasOne("SafeMapQROOBackend.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -309,7 +364,7 @@ namespace SafeMapQROOBackend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SafeMapQROO.Models.AppUser", null)
+                    b.HasOne("SafeMapQROOBackend.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -318,11 +373,25 @@ namespace SafeMapQROOBackend.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("SafeMapQROO.Models.AppUser", null)
+                    b.HasOne("SafeMapQROOBackend.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("SafeMapQROOBackend.Models.Occupancy", b =>
+                {
+                    b.HasOne("SafeMapQROOBackend.Models.Shelter", "Shelter")
+                        .WithMany("Occupancy")
+                        .HasForeignKey("ShelterId");
+
+                    b.Navigation("Shelter");
+                });
+
+            modelBuilder.Entity("SafeMapQROOBackend.Models.Shelter", b =>
+                {
+                    b.Navigation("Occupancy");
                 });
 #pragma warning restore 612, 618
         }

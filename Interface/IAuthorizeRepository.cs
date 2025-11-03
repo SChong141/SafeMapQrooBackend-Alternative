@@ -2,17 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SafeMapQROO.Dtos;
-using SafeMapQROO.Dtos.Account;
-using SafeMapQROO.Models;
+using SafeMapQROOBackend.Dtos;
+using SafeMapQROOBackend.Dtos.Account;
+using SafeMapQROOBackend.Models;
 
 
-namespace SafeMapQROO.Interface
+namespace SafeMapQROOBackend.Interfaces
 {
     public interface IAuthorizeRepository
     {
-        Task<InfoUserDto?> RegisterNewUserAsyn(AppUser registerNew, string role, string password);
+        Task<NewLoginDTO?> RegisterNewUserAsyn(AppUser registerNew, string role, string password);
         Task<AppUser?> NewPasswordAsync(string Email, string password);
-        List<string> GetRolAsync(string token);
     }
 }

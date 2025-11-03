@@ -5,17 +5,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
-using SafeMapQROO.Dtos;
-using SafeMapQROO.Dtos.Account;
-using SafeMapQROO.Interface;
-using SafeMapQROO.Models;
+using SafeMapQROOBackend.Dtos.Account;
+using SafeMapQROOBackend.Interfaces;
+using SafeMapQROOBackend.Models;
 
-
-namespace SafeMapQROO.Controllers
+namespace SafeMapQROOBackend.Controllers
 {
-    [Route("api/Authorize")]
+    [Route("api/authorize")]
     [ApiController]
     public class AuthorizeController : ControllerBase
     {
@@ -30,150 +27,180 @@ namespace SafeMapQROO.Controllers
             _signInManager = signInManager;
             _register = register;
         }
+
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginDto loginDto)
+        public async Task<IActionResult> Login(LoginDTO loginDTO)
         {
             if (!ModelState.IsValid)
+            {
                 return BadRequest(ModelState);
+            }
 
-            var User = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == loginDto.Username);
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == loginDTO.Email.ToLower());
 
-            if (User == null)
-                return Unauthorized("Invalid Username");
-            var result = await _signInManager.CheckPasswordSignInAsync(User, loginDto.Password, false);
+            if (user == null)
+            {
+                return Unauthorized("Invalid user.");
+            }
+
+            var result = await _signInManager.CheckPasswordSignInAsync(user, loginDTO.Password, false);
+
             if (!result.Succeeded)
-                return Unauthorized("Username not found and/or password incorrect");
-
-
-            return Ok(new InfoUserDto
             {
-                UserName = User.UserName,
-                Email = User.Email,
-                Token = await _tokenService.CreateToken(User)
+                return Unauthorized("Username not found and/or password incorrect.");
+            }
 
-            });
-
-        }
-
-
-        [HttpGet("{Token}")]
-        public async Task<IActionResult> GetRol([FromRoute] string Token)
-        {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            var rol = _register.GetRolAsync(Token);
-            if (rol == null) return BadRequest("No exist rol");
-            return Ok(rol);
-        }
-
-
-
-        [HttpPost("registerCitizen")]
-        public async Task<IActionResult> Register([FromBody] RegisterUserDto regiUserDto)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
-                var ExistUser = await _userManager.FindByEmailAsync(regiUserDto.Email);
-                if (ExistUser != null) return BadRequest("Email Exist");
-
-
-                var appUser = new AppUser
+            return Ok(
+                new NewLoginDTO
                 {
-                    UserName = regiUserDto.UserName,
-                    Names = regiUserDto.Names,
-                    Lastname = regiUserDto.Lastname,
-                    Email = regiUserDto.Email,
-                };
-
-                var registerUser = await _register.RegisterNewUserAsyn(appUser, "User", regiUserDto.Password);
-
-                if (registerUser == null) return BadRequest(registerUser);
-
-                return Ok(registerUser);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-
-            }
-
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    Token = await _tokenService.CreateToken(user)
+                }
+            );
         }
 
         [HttpPost("registerAdmin")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> RegisterAdmin([FromBody] RegisterUserDto userDto)
+        // [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> RegisterAdmin([FromBody] RegisterAdminDTO registerAdminDTO)
         {
             try
             {
                 if (!ModelState.IsValid)
+                {
                     return BadRequest(ModelState);
-                var ExistUser = await _userManager.FindByEmailAsync(userDto.Email);
-                if (ExistUser != null) return BadRequest("Email Exist");
-
+                }
 
                 var appUser = new AppUser
                 {
-                    UserName = userDto.UserName,
-                    Names = userDto.Names,
-                    Lastname = userDto.Lastname,
-                    Email = userDto.Email,
+                    UserName = registerAdminDTO.UserName,
+                    Email = registerAdminDTO.Email
                 };
 
-                var registerUser = await _register.RegisterNewUserAsyn(appUser, "Admin", userDto.Password);
+                var ExistUser = await _userManager.FindByEmailAsync(registerAdminDTO.Email);
 
-                if (registerUser == null) return BadRequest(registerUser);
+                if (ExistUser != null)
+                {
+                    return BadRequest("Email Exist");
+                }
 
+                var registerUser = await _register.RegisterNewUserAsyn(appUser, "Admin", registerAdminDTO.Password);
+
+                if (registerUser == null)
+                {
+                    return BadRequest(registerUser);
+                }
+
+                return Ok(registerUser);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e);
+            }
+        }
+        
+        [HttpPost("registerOrganizer")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> RegisterOrganizer([FromBody] RegisterOrganizerDTO registerOrganizerDTO)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var ExistUser = await _userManager.FindByEmailAsync(registerOrganizerDTO.Email);
+
+                if (ExistUser != null)
+                {
+                    return BadRequest("Email Exist");
+                }
+
+                var appUser = new AppUser
+                {
+                    UserName = registerOrganizerDTO.UserName,
+                    Email = registerOrganizerDTO.Email,
+                    PhoneNumber = registerOrganizerDTO.PhoneNumber,
+                    AssignedShelter = registerOrganizerDTO.AssignedShelter
+                };
+
+                var registerUser = await _register.RegisterNewUserAsyn(appUser, "Organizer", registerOrganizerDTO.Password);
+
+                if (registerUser == null)
+                {
+                    return BadRequest(registerUser);
+                }
+                
                 return Ok(registerUser);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
-
             }
         }
-        [HttpPost("registerEmployee")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> RegisterEmployee([FromBody] RegisterUserDto userDto)
+
+        [HttpPut]
+        [Authorize]
+        public async Task<IActionResult> Update([FromBody] UpdateUserDTO updateDTO)
         {
             try
             {
                 if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
-                var ExistUser = await _userManager.FindByEmailAsync(userDto.Email);
-                if (ExistUser != null) return BadRequest("Email Exist");
-
-
-                var appUser = new AppUser
                 {
-                    UserName = userDto.UserName,
-                    Names = userDto.Names,
-                    Lastname = userDto.Lastname,
-                };
+                    return BadRequest(ModelState);
+                }
 
-                var registerUser = await _register.RegisterNewUserAsyn(appUser, "Employee", userDto.Password);
+                var user = await _userManager.FindByIdAsync(updateDTO.Id);
 
-                if (registerUser == null) return BadRequest(registerUser);
+                if (user == null)
+                {
+                    return Unauthorized("Invalid user.");
+                }
 
-                return Ok(registerUser);
+                user.UserName = updateDTO.UserName;
+                user.Email = updateDTO.Email;
+
+                var updatedUser = await _userManager.UpdateAsync(user);
+
+                if (updatedUser.Succeeded)
+                {
+                    return Ok(
+                        new UpdateUserDTO
+                        {
+                            Id = user.Id,
+                            UserName = user.UserName,
+                            Email = user.Email
+                        }
+                    );
+                }
+                else
+                {
+                    return StatusCode(500, updatedUser.Errors);
+                }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return BadRequest(ex.Message);
-
+                return StatusCode(500, e);
             }
         }
 
-        [HttpPut("NewPassword{Email}")]
-        [Authorize(Roles = "Admin,Employee,User")]
-        public async Task<IActionResult> UpdatePassword([FromRoute] string Email, [FromBody] NewPasswordDto newPassword)
+        /*[HttpGet("{Token}")]
+        public async Task<IActionResult> GetRol([FromRoute] string Token)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            var Resultpass = await _register.NewPasswordAsync(Email, newPassword.Password);
-            if (Resultpass == null) return BadRequest("Error");
-            return NoContent();
-        }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
+            var rol = _register.GetRolAsync(Token);
+            
+            if (rol == null)
+            {
+                return BadRequest("No exist rol");
+            }
 
+            return Ok(rol);
+        }*/
     }
 }
