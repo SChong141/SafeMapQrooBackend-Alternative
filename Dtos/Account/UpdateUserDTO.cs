@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 
 namespace SafeMapQROOBackend.Dtos.Account
 {
-    public class LoginDTO
+    public class UpdateUserDTO
     {
         [Required]
-        public string Email { get; set; }
+        public string? Id { get; set; }
         [Required]
-        public string Password { get; set; }        
+        public string? UserName { get; set; }
+        [Required]
+        [EmailAddress]
+        public string? Email { get; set; }
     }
 }

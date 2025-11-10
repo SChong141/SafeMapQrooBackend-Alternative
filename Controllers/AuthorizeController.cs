@@ -84,7 +84,7 @@ namespace SafeMapQROOBackend.Controllers
                     return BadRequest("Email Exist");
                 }
 
-                var registerUser = await _register.RegisterNewUserAsyn(appUser, "Admin", registerAdminDTO.Password);
+                var registerUser = await _register.RegisterNewUserAsync(appUser, "Admin", registerAdminDTO.Password);
 
                 if (registerUser == null)
                 {
@@ -125,7 +125,7 @@ namespace SafeMapQROOBackend.Controllers
                     AssignedShelter = registerOrganizerDTO.AssignedShelter
                 };
 
-                var registerUser = await _register.RegisterNewUserAsyn(appUser, "Organizer", registerOrganizerDTO.Password);
+                var registerUser = await _register.RegisterNewUserAsync(appUser, "Organizer", registerOrganizerDTO.Password);
 
                 if (registerUser == null)
                 {

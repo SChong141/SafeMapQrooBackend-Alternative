@@ -23,12 +23,14 @@ namespace SafeMapQROOBackend.Repository
             _tokenService = tokenService;
         }
 
-        public async Task<NewLoginDTO?> RegisterNewUserAsyn(AppUser registerNew, string role, string password)
+        public async Task<NewLoginDTO?> RegisterNewUserAsync(AppUser registerNew, string role, string password)
         {
             var createUser = await _userManager.CreateAsync(registerNew, password);
+
             if (createUser.Succeeded)
             {
                 var roleResult = await _userManager.AddToRoleAsync(registerNew, role);
+
                 if (roleResult.Succeeded)
                 {
                     return new NewLoginDTO
@@ -75,15 +77,15 @@ namespace SafeMapQROOBackend.Repository
             return ExistUser;
         }
 
-        /*public List<string> GetRolAsync(string token)
+        /*public List<string> GetRoleAsync(string token)
         {
             var Hander = new JwtSecurityTokenHandler();
 
             var jwtToken = Hander.ReadJwtToken(token);
 
             return jwtToken.Claims.Where(c => c.Type == ClaimTypes.Role || c.Type == "role")
-            .Select(c => c.Value)
-            .ToList();
+                .Select(c => c.Value)
+                .ToList();
         }*/
     }
 }

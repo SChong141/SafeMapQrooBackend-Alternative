@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using SafeMapQROOBackend.Models;
-using SafeMapQROOBackend.Models;
 
 namespace SafeMapQROOBackend.Data
 {
