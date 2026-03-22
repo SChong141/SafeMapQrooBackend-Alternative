@@ -48,33 +48,58 @@ namespace SafeMapQROOBackend.Repository
 
             var organizer = await _userManager.Users.FirstOrDefaultAsync(u => u.AssignedShelter == shelter.Id);
 
-            var response = new ShelterDTO
+            if (organizer != null)
             {
-                Id = shelter.Id,
-                Name = shelter.Name,
-                Latitude = shelter.Latitude,
-                Longitude = shelter.Longitude,
-                Capacity = shelter.Capacity,
-                Address = shelter.Address,
-                Municipality = shelter.Municipality,
-                Available = shelter.Available,
-                CreatedAt = shelter.CreatedAt,
-                Occupancy = shelter.Occupancy.Select(o => new OccupancyDTO
+                var response = new ShelterDTO
                 {
-                    Id = o.Id,
-                    CurrentOccupancy = o.CurrentOccupancy,
-                    UpdatedOn = o.UpdatedOn,
-                    ShelterId = o.ShelterId
-                }).ToList(),
-                Organizer = new UserDTO
+                    Id = shelter.Id,
+                    Name = shelter.Name,
+                    Latitude = shelter.Latitude,
+                    Longitude = shelter.Longitude,
+                    Capacity = shelter.Capacity,
+                    Address = shelter.Address,
+                    Municipality = shelter.Municipality,
+                    Available = shelter.Available,
+                    CreatedAt = shelter.CreatedAt,
+                    Occupancy = shelter.Occupancy.Select(o => new OccupancyDTO
+                    {
+                        Id = o.Id,
+                        CurrentOccupancy = o.CurrentOccupancy,
+                        UpdatedOn = o.UpdatedOn,
+                        ShelterId = o.ShelterId
+                    }).ToList(),
+                    Organizer = new UserDTO
+                    {
+                        UserName = organizer.UserName,
+                        PhoneNumber = organizer.PhoneNumber,
+                        Email = organizer.Email
+                    }
+                };
+                return response;
+            }
+            else
+            {
+                var response = new ShelterDTO
                 {
-                    UserName = organizer.UserName,
-                    PhoneNumber = organizer.PhoneNumber,
-                    Email = organizer.Email
-                }
-            };
-
-            return response;
+                    Id = shelter.Id,
+                    Name = shelter.Name,
+                    Latitude = shelter.Latitude,
+                    Longitude = shelter.Longitude,
+                    Capacity = shelter.Capacity,
+                    Address = shelter.Address,
+                    Municipality = shelter.Municipality,
+                    Available = shelter.Available,
+                    CreatedAt = shelter.CreatedAt,
+                    Occupancy = shelter.Occupancy.Select(o => new OccupancyDTO
+                    {
+                        Id = o.Id,
+                        CurrentOccupancy = o.CurrentOccupancy,
+                        UpdatedOn = o.UpdatedOn,
+                        ShelterId = o.ShelterId
+                    }).ToList()
+                };
+                return response;
+            }
         }
 
         public async Task<Shelter?> UpdateAsync(Guid id, UpdateShelterRequestDTO shelterDTO)
@@ -115,10 +140,17 @@ namespace SafeMapQROOBackend.Repository
             return shelterModel;
         }
 
-
         public async Task<Shelter?> ShelterExist(Guid id)
         {
             return await _context.Shelter.FirstOrDefaultAsync(s => s.Id == id);
+        }
+
+        public async Task<List<Shelter>> SheltersInArea(double supIzqLat, double supIzqLon, double infDerLat, double infDerLon)
+        {
+            return await _context.Shelter
+                .Include(c => c.Occupancy)
+                .Where(v => v.Deleted == false && v.Latitude >= infDerLat && v.Latitude <= supIzqLat && v.Longitude >= supIzqLon && v.Longitude <= infDerLon)
+                .ToListAsync();
         }
     }
 }

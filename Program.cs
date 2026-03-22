@@ -10,10 +10,6 @@ using SafeMapQROOBackend.Models;
 using SafeMapQROOBackend.Repository;
 using SafeMapQROOBackend.Service;
 using SafeMapQROOBackend.Data;
-using SafeMapQROOBackend.Interfaces;
-using SafeMapQROOBackend.Models;
-using SafeMapQROOBackend.Repository;
-using SafeMapQROOBackend.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,7 +32,11 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 // Swagger JWT
 builder.Services.AddSwaggerGen(option =>
 {
-    option.SwaggerDoc("v1", new OpenApiInfo { Title = "SafeMapQROOBackend", Version = "v1" });
+    option.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "SafeMapQROOBackend",
+        Version = "v1"
+    });
     option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -60,7 +60,8 @@ builder.Services.AddSwaggerGen(option =>
             new string[]{}
         }
     });
-});
+}
+);
 
 // Configuiracion de Contexto de Base de Datos
 builder.Services.AddDbContext<ApplicationDBContext>(Options => Options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -73,7 +74,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
     options.Password.RequireLowercase = true;
     options.Password.RequireUppercase = true;
     options.Password.RequireNonAlphanumeric = true;
-    options.Password.RequiredLength = 12;
+    options.Password.RequiredLength = 8;
 }).AddEntityFrameworkStores<ApplicationDBContext>();
 
 builder.Services.AddAuthentication(options =>
@@ -92,7 +93,6 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = builder.Configuration["JWT:Issuer"],
         ValidateAudience = true,
         ValidAudience = builder.Configuration["JWT:Audience"],
-        ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"]))
     };
 });
@@ -102,6 +102,18 @@ builder.Services.AddScoped<IShelterRepository, ShelterRepository>();
 builder.Services.AddScoped<IOccupancyRepository, OccupancyRepository>();
 builder.Services.AddScoped<IAuthorizeRepository, AuthorizeRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<ILocationService, LocationService>();
+
+// CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
 
 var app = builder.Build();
 
@@ -112,13 +124,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("AllowAll");
+
 app.UseHttpsRedirection();
-app.UseAuthentication();
-app.UseAuthorization();
 
 app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();
+
+// app.Urls.Add("http://216.238.94.51:5078");
 
 app.Run();
