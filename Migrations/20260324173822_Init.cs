@@ -203,8 +203,8 @@ namespace SafeMapQROOBackend.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "1", "5670b58e-5599-43d7-b178-2d544b2c3585", "Admin", "ADMIN" },
-                    { "2", "56022a90-d091-4196-9fa6-2457b3475fd3", "Organizer", "ORGANIZER" }
+                    { "1", "013dd9ab-4f42-425a-bceb-e8a9e37bf801", "Admin", "ADMIN" },
+                    { "2", "c41a464e-2834-43b3-9b58-a0cc20324236", "Organizer", "ORGANIZER" }
                 });
 
             migrationBuilder.InsertData(

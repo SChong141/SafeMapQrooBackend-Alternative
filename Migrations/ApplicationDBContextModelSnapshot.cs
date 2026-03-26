@@ -46,14 +46,14 @@ namespace SafeMapQROOBackend.Migrations
                         new
                         {
                             Id = "1",
-                            ConcurrencyStamp = "5670b58e-5599-43d7-b178-2d544b2c3585",
+                            ConcurrencyStamp = "013dd9ab-4f42-425a-bceb-e8a9e37bf801",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "2",
-                            ConcurrencyStamp = "56022a90-d091-4196-9fa6-2457b3475fd3",
+                            ConcurrencyStamp = "c41a464e-2834-43b3-9b58-a0cc20324236",
                             Name = "Organizer",
                             NormalizedName = "ORGANIZER"
                         });
